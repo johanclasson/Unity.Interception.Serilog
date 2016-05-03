@@ -31,9 +31,10 @@ namespace Unity.Interception.Serilog.Tests
 
         public void Dispose()
         {
-            _builder.Container.Resolve<IDummy>().DoStuff(1, "b");
+            _builder.Container.Resolve<IDummy>().ReturnStuff(1, "b");
             _builder.Log["Information"].Count.Should().Be(1);
-            _builder.Log["Information"][0].Message.Should().Be("Method: {Method} called with arguments {@Arguments} returned {@Result} after {Duration}");
+            _builder.Log["Information"][0].Message.Should()
+                .Be("Method: {Method} called with arguments {@Arguments} returned {@Result} after {Duration}");
             _builder.Dispose();
         }
 
@@ -41,8 +42,6 @@ namespace Unity.Interception.Serilog.Tests
         //TODO: test parameters
         //TODO: Exception
         //TODO: Cache? Configure log and cache with attributes?
-        //TODO: How do log message read for void methods?
-        //TODO: How do log message read for methods without parameters?
         //TODO: Ignore logging parameter
     }
 }

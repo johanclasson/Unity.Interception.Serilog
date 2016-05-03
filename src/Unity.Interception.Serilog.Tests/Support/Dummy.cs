@@ -2,14 +2,20 @@
 {
     public interface IDummy
     {
-        string DoStuff(int a, string b);
+        string ReturnStuff(int a, string b);
+
+        void DoStuff();
     }
 
     public class Dummy : IDummy
     {
-        public string DoStuff(int a, string b)
+        public string ReturnStuff(int a, string b)
         {
             return $"{a} {b}";
+        }
+
+        public void DoStuff()
+        {
         }
     }
 }

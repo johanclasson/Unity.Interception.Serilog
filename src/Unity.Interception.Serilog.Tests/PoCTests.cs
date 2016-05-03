@@ -47,7 +47,8 @@ namespace Unity.Interception.Serilog.Tests
             var container = new UnityContainer();
             container.RegisterLoggedType<IDummy, Dummy>();
             container.RegisterInstance(log);
-            container.Resolve<IDummy>().DoStuff(1, "a");
+            container.Resolve<IDummy>().ReturnStuff(1, "a");
+            container.Resolve<IDummy>().DoStuff();
             // Examine log manually
         }
     }
