@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("TS.Framework.Logging.Tests")]
+[assembly: AssemblyTitle("Unity.Interception.Serilog")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("C02UMESMG0012")]
-[assembly: AssemblyProduct("TS.Framework.Logging.Tests")]
+[assembly: AssemblyProduct("Unity.Interception.Serilog")]
 [assembly: AssemblyCopyright("Copyright © C02UMESMG0012 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("0fcbe96a-8507-4ac0-9211-737305b09cb0")]
+[assembly: Guid("4d7b50c7-dba0-4f53-b23f-c537d66375c7")]
 
 // Version information for an assembly consists of the following four values:
 //
