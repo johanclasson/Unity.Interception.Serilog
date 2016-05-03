@@ -1,63 +1,45 @@
 ﻿using System;
+using System.Collections.Generic;
+using FluentAssertions;
 using Microsoft.Practices.Unity;
 using Moq;
 using Serilog;
 using Serilog.Sinks.Elasticsearch;
+using Unity.Interception.Serilog.Tests.Support;
 using Xunit;
 
 namespace Unity.Interception.Serilog.Tests
 {
-    public class LogTests
+    public class LogTests : IDisposable
     {
-        [Fact(Skip = "PoC")]
-        public void ShouldBeAbleToWriteToSqlServer()
-        {
-            ILogger log = new LoggerConfiguration()
-                .WriteTo.MSSqlServer(connectionString: @"Server=.;Database=Serilog;Trusted_Connection=True;",
-                    tableName: "Logs")
-                .CreateLogger();
-            var exception = new NotImplementedException("Level 1",
-                new NotImplementedException("Level 2", new NotImplementedException("Level 3")));
-            log.Information(exception, "The current weather is {@Weather}.", new {Condition = "Sunny", WindSpeed = 12.3});
-        }
+        private readonly UnityContainer _container;
+        private readonly IDummy _dummy;
+        private readonly List<LogEntry> _loggedInformationMessages;
 
-        [Fact(Skip = "PoC")]
-        public void ShouldBeAbleToWriteToElasticsearch()
+        public LogTests()
         {
-            ILogger log = new LoggerConfiguration()
-                .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://localhost:9200"))
-                {
-                    AutoRegisterTemplate = true
-                })
-                .CreateLogger();
-            var exception = new NotImplementedException("Level 1",
-                new NotImplementedException("Level 2", new NotImplementedException("Level 3")));
-            log.Information(exception, "The current weather is {@Weather}.", new {Condition = "Sunny", WindSpeed = 8.4});
+            _container = new UnityContainer();
+            _container.RegisterLoggedType<IDummy, Dummy>();
+            var loggerMock = new Mock<ILogger>();
+            _loggedInformationMessages = new List<LogEntry>();
+            loggerMock.Setup(m => m.Information(It.IsAny<string>(), It.IsAny<object[]>()))
+                .Callback<string, object[]>((m, p) => _loggedInformationMessages.Add(new LogEntry {Message = m, Parameters = p}));
+            _container.RegisterInstance(loggerMock.Object);
+
+            _dummy = _container.Resolve<IDummy>();
         }
 
         [Fact]
-        public void FactMethodName()
+        public void InvokingMethodOnInterceptedType_ShouldLog()
         {
-            var container = new UnityContainer();
-            container.RegisterLoggedType<IDummy, Dummy>();
-            var loggerMock = new Mock<ILogger>();
-            container.RegisterInstance(loggerMock.Object);
-
-            container.Resolve<IDummy>().DoStuff(1, "b");
-            loggerMock.Verify(m => m.Information(It.IsAny<string>()));
+            _dummy.DoStuff(1, "b");
+            _loggedInformationMessages.Count.Should().Be(1);
+            _loggedInformationMessages[0].Message.Should().Be("Method: {Name} called with arguments {@Arguments} returned {@Result}");
         }
-    }
 
-    internal interface IDummy
-    {
-        string DoStuff(int a, string b);
-    }
-
-    public class Dummy : IDummy
-    {
-        public string DoStuff(int a, string b)
+        public void Dispose()
         {
-            return $"{a} {b}";
+            _container?.Dispose();
         }
     }
 }

@@ -21,9 +21,9 @@ namespace Unity.Interception.Serilog
         {
             container
                 .AddNewExtensionIfNotPresent<Microsoft.Practices.Unity.InterceptionExtension.Interception>()
-                .RegisterType<TFrom, TTo>(injectionMembers)
-                .Configure<Microsoft.Practices.Unity.InterceptionExtension.Interception>()
-                .SetInterceptorFor<TFrom>(new InterfaceInterceptor());
+                .RegisterType<TFrom, TTo>(
+                    new Interceptor<InterfaceInterceptor>(),
+                    new InterceptionBehavior<LoggingInterceptionBehavior>());
             return container;
         }
 
