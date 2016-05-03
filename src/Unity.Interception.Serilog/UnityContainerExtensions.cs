@@ -65,19 +65,18 @@ namespace Unity.Interception.Serilog
 
         #region Helpers
 
-        public static IUnityContainer AddNewExtensionIfNotPresent<TExtension>(this IUnityContainer container)
-            where TExtension : UnityContainerExtension, new()
+        private static void Init(this IUnityContainer container)
         {
-            if (container == null)
-                throw new ArgumentNullException(nameof(container));
-            if (container.Configure<TExtension>() == null)
-                container.AddNewExtension<TExtension>();
-            return container;
+            if (container.Configure<Microsoft.Practices.Unity.InterceptionExtension.Interception>() == null)
+                container.AddNewExtension<Microsoft.Practices.Unity.InterceptionExtension.Interception>();
+            if (!container.IsRegistered<IStopWatch>())
+                container.RegisterType<IStopWatch, Stopwatch>();
+
         }
 
         private static InjectionMember[] GetMembers(IUnityContainer container, params InjectionMember[] injectionMembers)
         {
-            container.AddNewExtensionIfNotPresent<Microsoft.Practices.Unity.InterceptionExtension.Interception>();
+            container.Init();
             InjectionMember[] loggingMembers =
             {
                 new Interceptor<InterfaceInterceptor>(),

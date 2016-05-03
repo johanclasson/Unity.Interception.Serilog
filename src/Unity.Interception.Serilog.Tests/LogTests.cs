@@ -21,9 +21,12 @@ namespace Unity.Interception.Serilog.Tests
             loggerMock.Setup(m => m.Information(It.IsAny<string>(), It.IsAny<object[]>()))
                 .Callback<string, object[]>((m, p) => _loggedInformationMessages.Add(new LogEntry {Message = m, Parameters = p}));
 
+            var stopWatchMock = new Mock<IStopWatch>();
+            stopWatchMock.SetupGet(m => m.Elapsed).Returns(TimeSpan.FromSeconds(2));
+
             _container = new UnityContainer();
             _container.RegisterInstance(loggerMock.Object);
-
+            _container.RegisterInstance(stopWatchMock.Object);
         }
 
         [Fact]
@@ -42,8 +45,16 @@ namespace Unity.Interception.Serilog.Tests
         {
             _container.Resolve<IDummy>().DoStuff(1, "b");
             _loggedInformationMessages.Count.Should().Be(1);
-            _loggedInformationMessages[0].Message.Should().Be("Method: {Name} called with arguments {@Arguments} returned {@Result}");
+            _loggedInformationMessages[0].Message.Should().Be("Method: {Method} called with arguments {@Arguments} returned {@Result} after {Duration}");
             _container?.Dispose();
         }
+
+        //TODO: null as parameter tests
+        //TODO: test parameters
+        //TODO: Exception
+        //TODO: Cache? Configure log and cache with attributes?
+        //TODO: How do log message read for void methods?
+        //TODO: How do log message read for methods without parameters?
+        //TODO: Ignore logging parameter
     }
 }

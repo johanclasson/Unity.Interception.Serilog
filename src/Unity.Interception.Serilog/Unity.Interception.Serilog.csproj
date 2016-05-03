@@ -73,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LoggingInterceptionBehavior.cs" />
+    <Compile Include="Stopwatch.cs" />
     <Compile Include="UnityContainerExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
