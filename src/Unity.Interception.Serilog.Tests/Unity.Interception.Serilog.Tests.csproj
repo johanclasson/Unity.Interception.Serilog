@@ -107,6 +107,7 @@
     <Compile Include="LogTests.cs" />
     <Compile Include="PoCTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Support\ContainerBuilder.cs" />
     <Compile Include="Support\Dummy.cs" />
     <Compile Include="Support\LogEntry.cs" />
   </ItemGroup>
