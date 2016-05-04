@@ -7,6 +7,8 @@ namespace Unity.Interception.Serilog.Tests
 {
     public class LogWithoutReturnOrParameterTypesTests : TestBase
     {
+        private const string ExpectedMessage = "Method {Method} ran for {Duration}";
+
         public LogWithoutReturnOrParameterTypesTests()
         {
             GivenThereExistsAContainer()
@@ -21,7 +23,7 @@ namespace Unity.Interception.Serilog.Tests
             Log["Information"]
                 .Select(l => l.Message)
                 .Should()
-                .BeEquivalentTo("Method: {Method} ran for {Duration}");
+                .BeEquivalentTo(ExpectedMessage);
         }
     }
 }

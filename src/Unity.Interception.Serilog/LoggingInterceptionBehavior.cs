@@ -23,10 +23,20 @@ namespace Unity.Interception.Serilog
             _stopWatch.Stop();
             if (!IgnoreMethod(input))
             {
-                var builder = new MessageBuilder(input, result, _stopWatch.Elapsed);
-                _logger.Information(builder.Build(), builder.PropertyValues);
+                LogMethodResult(input, result);
             }
             return result;
+        }
+
+        private void LogMethodResult(IMethodInvocation input, IMethodReturn result)
+        {
+            var builder = new MessageBuilder(input, result, _stopWatch.Elapsed);
+            if (result.Exception != null)
+            {
+                _logger.Error(result.Exception, builder.Build(), builder.PropertyValues);
+                return;
+            }
+            _logger.Information(builder.Build(), builder.PropertyValues);
         }
 
         private bool IgnoreMethod(IMethodInvocation input)

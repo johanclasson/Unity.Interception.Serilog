@@ -4,17 +4,15 @@ using Xunit;
 
 namespace Unity.Interception.Serilog.Tests
 {
-    public class LogMethodAfterMultipleRegistrationsTests : TestBase
+    public class LogInformationOnInterceptedInstanceTests : TestBase
     {
-        public LogMethodAfterMultipleRegistrationsTests()
+
+        public LogInformationOnInterceptedInstanceTests()
         {
             GivenThereExistsAContainer()
                 .WithAnInformationLogger()
-                .WithADummyTypeRegistered()
-                //TODO: Fix multiple registration of types! .WithADummyTypeRegistered()
-                .WithADummyInstanceRegistered()
                 .WithADummyInstanceRegistered();
-            WhenDummyIsResolvedAnd().DoStuff();
+            WhenDummyIsResolvedAnd().ReturnStuff(1, "b");
         }
 
         [Fact]

@@ -24,26 +24,51 @@ namespace Unity.Interception.Serilog
 
         public string Build()
         {
-            var sb = new StringBuilder("Method: {Method}");
+            var sb = AddMethod();
+            AddArguments(sb);
+            AddResultAndDuration(sb);
+            return sb.ToString();
+        }
+
+        private StringBuilder AddMethod()
+        {
+            var sb = new StringBuilder("Method {Method}");
             _propertyValues.Add(MethodName);
+            if (IsFailedResult)
+                sb.Append(" failed");
+            return sb;
+        }
+
+        private void AddArguments(StringBuilder sb)
+        {
             object[] arguments = GetArguments().ToArray();
             if (arguments.Length != 0)
             {
                 sb.Append(" called with arguments {@Arguments}");
                 _propertyValues.Add(arguments);
             }
-            if (!_input.MethodBase.ToString().StartsWith("Void "))
+        }
+
+        private void AddResultAndDuration(StringBuilder sb)
+        {
+            if (IsFailedResult)
             {
-                sb.Append(" returned {@Result} after {Duration}");
-                _propertyValues.Add(_result.ReturnValue);
+                sb.Append(" after {Duration}");
+                _propertyValues.Add(_duration);
+                return;
             }
-            else
+            if (_input.MethodBase.ToString().StartsWith("Void "))
             {
                 sb.Append(" ran for {Duration}");
+                _propertyValues.Add(_duration);
+                return;
             }
+            sb.Append(" returned {@Result} after {Duration}");
+            _propertyValues.Add(_result.ReturnValue);
             _propertyValues.Add(_duration);
-            return sb.ToString();
         }
+
+        private bool IsFailedResult => _result.Exception != null;
 
         private string MethodName => $"{_input?.MethodBase?.ReflectedType?.FullName}.{_input?.MethodBase?.Name}";
 

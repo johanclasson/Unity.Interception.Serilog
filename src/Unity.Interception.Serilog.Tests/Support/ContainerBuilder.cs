@@ -12,7 +12,8 @@ namespace Unity.Interception.Serilog.Tests.Support
         {
             Log = new Dictionary<string, List<LogEntry>>
             {
-                ["Information"] = new List<LogEntry>()
+                ["Information"] = new List<LogEntry>(),
+                ["Error"] = new List<LogEntry>()
             };
         }
 
@@ -25,6 +26,9 @@ namespace Unity.Interception.Serilog.Tests.Support
             loggerMock
                 .Setup(m => m.Information(It.IsAny<string>(), It.IsAny<object[]>()))
                 .Callback<string, object[]>((m, p) => Log["Information"].Add(new LogEntry { Message = m, Parameters = p }));
+            loggerMock
+                .Setup(m => m.Error(It.IsAny<Exception>(), It.IsAny<string>(), It.IsAny<object[]>()))
+                .Callback<Exception, string, object[]>((e, m, p) => Log["Error"].Add(new LogEntry { Exception = e, Message = m, Parameters = p }));
             Container.RegisterInstance(loggerMock.Object);
             return this;
         }

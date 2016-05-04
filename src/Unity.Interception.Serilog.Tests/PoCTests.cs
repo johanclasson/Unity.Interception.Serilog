@@ -49,6 +49,12 @@ namespace Unity.Interception.Serilog.Tests
             container.RegisterInstance(log);
             container.Resolve<IDummy>().ReturnStuff(1, "a");
             container.Resolve<IDummy>().DoStuff();
+            try { container.Resolve<IDummy>().ThrowException(); }
+            catch (Exception)
+            {
+                // ignored
+            }
+
             // Examine log manually
         }
     }

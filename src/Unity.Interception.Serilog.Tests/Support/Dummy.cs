@@ -1,4 +1,5 @@
-﻿using Unity.Interception.Customization;
+﻿using System;
+using Unity.Interception.Customization;
 
 namespace Unity.Interception.Serilog.Tests.Support
 {
@@ -12,6 +13,8 @@ namespace Unity.Interception.Serilog.Tests.Support
         void DoSecretStuff();
 
         void DoStuffWithSecretParameter(string username, [IgnoreMember] string password);
+
+        int ThrowException();
     }
 
     public class Dummy : IDummy
@@ -31,6 +34,11 @@ namespace Unity.Interception.Serilog.Tests.Support
 
         public void DoStuffWithSecretParameter(string username, string password)
         {
+        }
+
+        public int ThrowException()
+        {
+            throw new InvalidOperationException("Something bad happened");
         }
     }
 }

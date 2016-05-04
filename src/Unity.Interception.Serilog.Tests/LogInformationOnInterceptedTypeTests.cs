@@ -6,9 +6,12 @@ using Xunit;
 
 namespace Unity.Interception.Serilog.Tests
 {
-    public class LogMethodOnInterceptedTypeTests : TestBase
+    public class LogInformationOnInterceptedTypeTests : TestBase
     {
-        public LogMethodOnInterceptedTypeTests()
+        private const string ExpectedMessage = "Method {Method} called with arguments {@Arguments} returned {@Result} after {Duration}";
+        private const string ExpectedMethod = "Unity.Interception.Serilog.Tests.Support.IDummy.ReturnStuff";
+
+        public LogInformationOnInterceptedTypeTests()
         {
             GivenThereExistsAContainer()
                 .WithAnInformationLogger()
@@ -20,11 +23,11 @@ namespace Unity.Interception.Serilog.Tests
         [Fact]
         public void ThenAnInformationWithExpectedMessageShouldBeLogged()
         {
+            Log["Error"].Count.Should().Be(0);
             Log["Information"]
                 .Select(l => l.Message)
                 .Should()
-                .BeEquivalentTo(
-                    "Method: {Method} called with arguments {@Arguments} returned {@Result} after {Duration}");
+                .BeEquivalentTo(ExpectedMessage);
         }
 
         [Fact]
@@ -33,7 +36,7 @@ namespace Unity.Interception.Serilog.Tests
             var parameters = Log["Information"].Select(l => l.Parameters).First();
             parameters.ShouldBeEquivalentTo(new object[]
             {
-                "Unity.Interception.Serilog.Tests.Support.IDummy.ReturnStuff",
+                ExpectedMethod,
                 new object[]
                 {
                     new {Name = "a", Value = "1"},
