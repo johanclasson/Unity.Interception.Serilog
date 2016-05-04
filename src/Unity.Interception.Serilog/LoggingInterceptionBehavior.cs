@@ -21,9 +21,17 @@ namespace Unity.Interception.Serilog
             _stopWatch.Start();
             var result = getNext()(input, getNext);
             _stopWatch.Stop();
-            var builder = new MessageBuilder(input, result, _stopWatch.Elapsed);
-            _logger.Information(builder.Build(), builder.PropertyValues);
+            if (!IgnoreMethod(input))
+            {
+                var builder = new MessageBuilder(input, result, _stopWatch.Elapsed);
+                _logger.Information(builder.Build(), builder.PropertyValues);
+            }
             return result;
+        }
+
+        private bool IgnoreMethod(IMethodInvocation input)
+        {
+            return input.MethodBase.CustomAttributes.ContainsIgnoreAttribute();
         }
 
         public IEnumerable<Type> GetRequiredInterfaces() => Type.EmptyTypes;

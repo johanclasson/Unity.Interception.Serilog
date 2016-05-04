@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using Microsoft.Practices.Unity.InterceptionExtension;
 
@@ -48,15 +49,21 @@ namespace Unity.Interception.Serilog
 
         private IEnumerable<object> GetArguments()
         {
-            var arguments = _input.Arguments;
+            IParameterCollection arguments = _input.Arguments;
             for (int i = 0; i < arguments.Count; i++)
             {
+                string value = IgnoreArgumentValue(arguments.GetParameterInfo(i)) ? "[hidden]" : arguments[i].ToString();
                 yield return new
                 {
                     Name = arguments.ParameterName(i),
-                    Value = arguments[i].ToString()
+                    Value = value
                 };
             }
+        }
+
+        private bool IgnoreArgumentValue(ParameterInfo info)
+        {
+            return info.CustomAttributes.ContainsIgnoreAttribute();
         }
     }
 }

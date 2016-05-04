@@ -72,6 +72,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CustomAttributesExtensions.cs" />
     <Compile Include="LoggingInterceptionBehavior.cs" />
     <Compile Include="MessageBuilder.cs" />
     <Compile Include="Stopwatch.cs" />
@@ -80,6 +81,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Unity.Interception.Customization\Unity.Interception.Customization.csproj">
+      <Project>{a49a98b0-0b62-4580-ba31-e81e67a14d19}</Project>
+      <Name>Unity.Interception.Customization</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

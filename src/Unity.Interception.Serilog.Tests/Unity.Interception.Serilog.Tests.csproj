@@ -104,6 +104,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DoNotLogIgnoredMethodsTests.cs" />
+    <Compile Include="DoNotLogIgnoredArgumentsTests.cs" />
     <Compile Include="LogMethodOnInterceptedInstanceTests.cs" />
     <Compile Include="LogMethodOnInterceptedTypeTests.cs" />
     <Compile Include="LogWithoutReturnOrParameterTypesTests.cs" />
@@ -121,6 +123,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Unity.Interception.Customization\Unity.Interception.Customization.csproj">
+      <Project>{a49a98b0-0b62-4580-ba31-e81e67a14d19}</Project>
+      <Name>Unity.Interception.Customization</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Unity.Interception.Serilog\Unity.Interception.Serilog.csproj">
       <Project>{4d7b50c7-dba0-4f53-b23f-c537d66375c7}</Project>
       <Name>Unity.Interception.Serilog</Name>
