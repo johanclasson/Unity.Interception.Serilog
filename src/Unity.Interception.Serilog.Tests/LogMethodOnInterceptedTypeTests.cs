@@ -1,19 +1,20 @@
-using System.Linq;
+﻿using System.Linq;
 using FluentAssertions;
 using Unity.Interception.Serilog.Tests.Support;
 using Xunit;
 
 namespace Unity.Interception.Serilog.Tests
 {
-    public class LogWithoutReturnOrParameterTypesdTests : TestBase
+    public class LogMethodOnInterceptedTypeTests : TestBase
     {
-        public LogWithoutReturnOrParameterTypesdTests()
+
+        public LogMethodOnInterceptedTypeTests()
         {
             GivenThereExistsAnContainer()
                 .WithAnInformationLogger()
                 .WithAStopWatch()
                 .WithADummyTypeRegistered();
-            WhenDummyIsResolvedAnd().DoStuff();
+            WhenDummyIsResolvedAnd().ReturnStuff(1, "b");
         }
 
         [Fact]
@@ -22,7 +23,7 @@ namespace Unity.Interception.Serilog.Tests
             Log["Information"]
                 .Select(l => l.Message)
                 .Should()
-                .BeEquivalentTo("Method: {Method} ran for {Duration}");
+                .BeEquivalentTo("Method: {Method} called with arguments {@Arguments} returned {@Result} after {Duration}");
         }
     }
 }

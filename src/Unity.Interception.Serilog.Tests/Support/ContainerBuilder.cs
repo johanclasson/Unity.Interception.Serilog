@@ -6,7 +6,7 @@ using Serilog;
 
 namespace Unity.Interception.Serilog.Tests.Support
 {
-    internal class ContainerBuilder : IDisposable
+    public class ContainerBuilder : IDisposable
     {
         public ContainerBuilder()
         {
@@ -19,7 +19,7 @@ namespace Unity.Interception.Serilog.Tests.Support
         public UnityContainer Container { get; } = new UnityContainer();
         public Dictionary<string, List<LogEntry>> Log { get; }
 
-        public ContainerBuilder WithInformationLoggerMock()
+        public ContainerBuilder WithAnInformationLogger()
         {
             var loggerMock = new Mock<ILogger>();
             loggerMock
@@ -29,7 +29,7 @@ namespace Unity.Interception.Serilog.Tests.Support
             return this;
         }
 
-        public ContainerBuilder WithStopWatchMock()
+        public ContainerBuilder WithAStopWatch()
         {
             var stopWatchMock = new Mock<IStopWatch>();
             stopWatchMock
@@ -39,9 +39,22 @@ namespace Unity.Interception.Serilog.Tests.Support
             return this;
         }
 
+        public ContainerBuilder WithADummyTypeRegistered()
+        {
+            Container.RegisterLoggedType<IDummy, Dummy>();
+            return this;
+        }
+
+        public ContainerBuilder WithADummyInstanceRegistered()
+        {
+            Container.RegisterLoggedInstance<IDummy>(new Dummy());
+            return this;
+        }
+
         public void Dispose()
         {
             Container?.Dispose();
         }
+
     }
 }
