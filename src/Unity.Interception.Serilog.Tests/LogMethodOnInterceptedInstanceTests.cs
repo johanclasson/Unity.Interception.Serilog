@@ -9,7 +9,7 @@ namespace Unity.Interception.Serilog.Tests
 
         public LogMethodOnInterceptedInstanceTests()
         {
-            GivenThereExistsAnContainer()
+            GivenThereExistsAContainer()
                 .WithAnInformationLogger()
                 .WithAStopWatch()
                 .WithADummyInstanceRegistered();

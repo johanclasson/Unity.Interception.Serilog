@@ -10,7 +10,7 @@ namespace Unity.Interception.Serilog.Tests.Support
 
         protected Dictionary<string, List<LogEntry>> Log => _builder.Log;
 
-        protected ContainerBuilder GivenThereExistsAnContainer()
+        protected ContainerBuilder GivenThereExistsAContainer()
         {
             _builder = new ContainerBuilder();
             return _builder;
@@ -23,7 +23,7 @@ namespace Unity.Interception.Serilog.Tests.Support
 
         public void Dispose()
         {
-            _builder.Dispose();
+            _builder?.Dispose();
         }
     }
 }

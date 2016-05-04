@@ -9,7 +9,7 @@ namespace Unity.Interception.Serilog.Tests
     {
         public LogWithoutReturnOrParameterTypesdTests()
         {
-            GivenThereExistsAnContainer()
+            GivenThereExistsAContainer()
                 .WithAnInformationLogger()
                 .WithAStopWatch()
                 .WithADummyTypeRegistered();
@@ -17,7 +17,7 @@ namespace Unity.Interception.Serilog.Tests
         }
 
         [Fact]
-        public void ThenAnInformationMessageShouldBeLogged()
+        public void ThenAnInformationWithExpectedMessageShouldBeLogged()
         {
             Log["Information"]
                 .Select(l => l.Message)

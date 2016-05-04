@@ -25,7 +25,7 @@ namespace Unity.Interception.Serilog
         {
             var sb = new StringBuilder("Method: {Method}");
             _propertyValues.Add(MethodName);
-            var arguments = GetArguments().ToArray();
+            object[] arguments = GetArguments().ToArray();
             if (arguments.Length != 0)
             {
                 sb.Append(" called with arguments {@Arguments}");
