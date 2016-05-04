@@ -9,56 +9,56 @@ namespace Unity.Interception.Serilog
         public static IUnityContainer RegisterLoggedType<TFrom, TTo>(this IUnityContainer container,
             params InjectionMember[] injectionMembers) where TTo : TFrom
         {
-            InjectionMember[] members = GetMembers(container, injectionMembers);
+            InjectionMember[] members = Init(container, injectionMembers);
             return container.RegisterType<TFrom, TTo>(members);
         }
 
         public static IUnityContainer RegisterLoggedType<TFrom, TTo>(this IUnityContainer container, string name,
             params InjectionMember[] injectionMembers) where TTo : TFrom
         {
-            InjectionMember[] members = GetMembers(container, injectionMembers);
+            InjectionMember[] members = Init(container, injectionMembers);
             return container.RegisterType<TFrom, TTo>(name, members);
         }
 
         public static IUnityContainer RegisterLoggedType<TFrom, TTo>(this IUnityContainer container,
             LifetimeManager lifetimeManager, params InjectionMember[] injectionMembers) where TTo : TFrom
         {
-            InjectionMember[] members = GetMembers(container, injectionMembers);
+            InjectionMember[] members = Init(container, injectionMembers);
             return container.RegisterType<TFrom, TTo>(lifetimeManager, members);
         }
 
         public static IUnityContainer RegisterLoggedType<TFrom, TTo>(this IUnityContainer container, string name,
             LifetimeManager lifetimeManager, params InjectionMember[] injectionMembers) where TTo : TFrom
         {
-            InjectionMember[] members = GetMembers(container, injectionMembers);
+            InjectionMember[] members = Init(container, injectionMembers);
             return container.RegisterType<TFrom, TTo>(name, lifetimeManager, members);
         }
 
         public static IUnityContainer RegisterLoggedInstance<TInterface>(this IUnityContainer container,
             TInterface instance)
         {
-            InjectionMember[] members = GetInstanceMembers(container, instance);
+            InjectionMember[] members = InitForInstance(container, instance);
             return container.RegisterType<TInterface>(members);
         }
 
         public static IUnityContainer RegisterLoggedInstance<TInterface>(this IUnityContainer container,
             TInterface instance, LifetimeManager lifetimeManager)
         {
-            InjectionMember[] members = GetInstanceMembers(container, instance);
+            InjectionMember[] members = InitForInstance(container, instance);
             return container.RegisterType<TInterface>(lifetimeManager, members);
         }
 
         public static IUnityContainer RegisterLoggedInstance<TInterface>(this IUnityContainer container, string name,
             TInterface instance)
         {
-            InjectionMember[] members = GetInstanceMembers(container, instance);
+            InjectionMember[] members = InitForInstance(container, instance);
             return container.RegisterType<TInterface>(name, members);
         }
 
         public static IUnityContainer RegisterLoggedInstance<TInterface>(this IUnityContainer container, string name,
             TInterface instance, LifetimeManager lifetimeManager)
         {
-            InjectionMember[] members = GetInstanceMembers(container, instance);
+            InjectionMember[] members = InitForInstance(container, instance);
             return container.RegisterType<TInterface>(name, lifetimeManager, members);
         }
 
@@ -70,10 +70,9 @@ namespace Unity.Interception.Serilog
                 container.AddNewExtension<Microsoft.Practices.Unity.InterceptionExtension.Interception>();
             if (!container.IsRegistered<IStopWatch>())
                 container.RegisterType<IStopWatch, Stopwatch>();
-
         }
 
-        private static InjectionMember[] GetMembers(IUnityContainer container, params InjectionMember[] injectionMembers)
+        private static InjectionMember[] Init(IUnityContainer container, params InjectionMember[] injectionMembers)
         {
             container.Init();
             InjectionMember[] loggingMembers =
@@ -84,9 +83,9 @@ namespace Unity.Interception.Serilog
             return injectionMembers.Concat(loggingMembers).ToArray();
         }
 
-        private static InjectionMember[] GetInstanceMembers<TInterface>(IUnityContainer container, TInterface instance)
+        private static InjectionMember[] InitForInstance<TInterface>(IUnityContainer container, TInterface instance)
         {
-            return GetMembers(container, new InjectionFactory(c => instance));
+            return Init(container, new InjectionFactory(c => instance));
         }
 
         #endregion
