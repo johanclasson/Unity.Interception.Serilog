@@ -106,7 +106,8 @@
   <ItemGroup>
     <Compile Include="LogMethodOnInterceptedInstanceTests.cs" />
     <Compile Include="LogMethodOnInterceptedTypeTests.cs" />
-    <Compile Include="LogWithoutReturnOrParameterTypesdTests.cs" />
+    <Compile Include="LogWithoutReturnOrParameterTypesTests.cs" />
+    <Compile Include="LogMethodAfterMultipleRegistrationsTests.cs" />
     <Compile Include="NullTests.cs" />
     <Compile Include="PoCTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

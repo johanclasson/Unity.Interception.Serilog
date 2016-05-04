@@ -5,13 +5,12 @@ using Xunit;
 
 namespace Unity.Interception.Serilog.Tests
 {
-    public class LogWithoutReturnOrParameterTypesdTests : TestBase
+    public class LogWithoutReturnOrParameterTypesTests : TestBase
     {
-        public LogWithoutReturnOrParameterTypesdTests()
+        public LogWithoutReturnOrParameterTypesTests()
         {
             GivenThereExistsAContainer()
                 .WithAnInformationLogger()
-                .WithAStopWatch()
                 .WithADummyTypeRegistered();
             WhenDummyIsResolvedAnd().DoStuff();
         }
