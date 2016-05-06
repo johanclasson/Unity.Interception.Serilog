@@ -9,7 +9,7 @@ namespace Unity.Interception.Serilog.Tests
         public LogInformationAfterMultipleRegistrationsTests()
         {
             GivenThereExistsAContainer()
-                .WithAnInformationLogger()
+                .WithConfiguredSerilog()
                 .WithADummyTypeRegistered()
                 //TODO: Fix multiple registration of types! .WithADummyTypeRegistered()
                 .WithADummyInstanceRegistered()
@@ -20,7 +20,7 @@ namespace Unity.Interception.Serilog.Tests
         [Fact]
         public void ThenAnInformationMessageShouldBeLogged()
         {
-            Log["Information"].Count.Should().Be(1);
+            Log.Count.Should().Be(1);
         }
     }
 }

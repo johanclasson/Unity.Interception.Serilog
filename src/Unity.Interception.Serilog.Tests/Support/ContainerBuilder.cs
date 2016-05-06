@@ -2,34 +2,19 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Practices.Unity;
 using Moq;
-using Serilog;
 
 namespace Unity.Interception.Serilog.Tests.Support
 {
     public class ContainerBuilder : IDisposable
     {
-        public ContainerBuilder()
-        {
-            Log = new Dictionary<string, List<LogEntry>>
-            {
-                ["Information"] = new List<LogEntry>(),
-                ["Error"] = new List<LogEntry>()
-            };
-        }
-
+        private LoggerMock _loggerMock;
         public UnityContainer Container { get; } = new UnityContainer();
-        public Dictionary<string, List<LogEntry>> Log { get; }
+        public IReadOnlyCollection<LogEntry> Log => _loggerMock.Log;
 
-        public ContainerBuilder WithAnInformationLogger()
+        public ContainerBuilder WithConfiguredSerilog()
         {
-            var loggerMock = new Mock<ILogger>();
-            loggerMock
-                .Setup(m => m.Information(It.IsAny<string>(), It.IsAny<object[]>()))
-                .Callback<string, object[]>((m, p) => Log["Information"].Add(new LogEntry { Message = m, Parameters = p }));
-            loggerMock
-                .Setup(m => m.Error(It.IsAny<Exception>(), It.IsAny<string>(), It.IsAny<object[]>()))
-                .Callback<Exception, string, object[]>((e, m, p) => Log["Error"].Add(new LogEntry { Exception = e, Message = m, Parameters = p }));
-            Container.RegisterInstance(loggerMock.Object);
+            _loggerMock = new LoggerMock();
+            Container.ConfigureSerilog(c => c.WriteTo.Logger(_loggerMock.Object));
             return this;
         }
 
@@ -59,6 +44,5 @@ namespace Unity.Interception.Serilog.Tests.Support
         {
             Container?.Dispose();
         }
-
     }
 }

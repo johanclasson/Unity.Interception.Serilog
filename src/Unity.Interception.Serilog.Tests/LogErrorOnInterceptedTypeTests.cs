@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using FluentAssertions;
+using Serilog.Events;
 using Unity.Interception.Serilog.Tests.Support;
 using Xunit;
 
@@ -13,38 +14,36 @@ namespace Unity.Interception.Serilog.Tests
         public LogErrorOnInterceptedTypeTests()
         {
             GivenThereExistsAContainer()
-                .WithAnInformationLogger()
+                .WithConfiguredSerilog()
                 .WithAStopWatch()
                 .WithADummyTypeRegistered();
             Action a = () => WhenDummyIsResolvedAnd().ThrowException();
             a.ShouldThrow<InvalidOperationException>();
         }
 
-        [Fact]
-        public void ThenAnErrorWithExpectedMessageShouldBeLogged()
+        public void ThenOneErrorLogShouldBeLogged()
         {
-            Log["Information"].Count.Should().Be(0);
-            Log["Error"]
-                .Select(l => l.Message)
-                .Should()
-                .BeEquivalentTo(ExpectedMessage);
+            Log.Single().Level.Should().Be(LogEventLevel.Error);
         }
 
         [Fact]
-        public void ThenAnErrorWithExpectedArgumentsShouldBeLogged()
+        public void ThenAnErrorWithExpectedMessageShouldBeLogged()
         {
-            var parameters = Log["Error"].Select(l => l.Parameters).First();
-            parameters.ShouldBeEquivalentTo(new object[]
-            {
-                "Unity.Interception.Serilog.Tests.Support.IDummy.ThrowException",
-                TimeSpan.FromSeconds(2)
-            });
+            Log.Single().Message.Should().Be(ExpectedMessage);
+        }
+
+        [Fact]
+        public void ThenAnErrorWithExpectedPropertiesShouldBeLogged()
+        {
+            var properties = Log.Single().Properties;
+            properties["Method"].Should().Be("Unity.Interception.Serilog.Tests.Support.IDummy.ThrowException");
+            properties["Duration"].Should().Be(TimeSpan.FromSeconds(2));
         }
 
         [Fact]
         public void ThenAnErrorWithExpectedExceptionShouldBeLogged()
         {
-            var exception = Log["Error"].Select(l => l.Exception).First();
+            var exception = Log.Single().Exception;
             exception.Should().BeOfType<InvalidOperationException>();
             exception.Message.Should().Be("Something bad happened");
         }

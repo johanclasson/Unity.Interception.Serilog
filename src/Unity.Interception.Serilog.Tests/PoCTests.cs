@@ -35,18 +35,16 @@ namespace Unity.Interception.Serilog.Tests
             log.Information(exception, "The current weather is {@Weather}.", new { Condition = "Sunny", WindSpeed = 8.4 });
         }
 
-        [Fact(Skip = "PoC")]
+        [Fact] //(Skip = "PoC")]
         public void ShouldLogArgumentsToElasticsearch()
         {
-            ILogger log = new LoggerConfiguration()
-               .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://localhost:9200"))
-               {
-                   AutoRegisterTemplate = true
-               })
-               .CreateLogger();
             var container = new UnityContainer();
+            container.ConfigureSerilog(
+                c => c.WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://localhost:9200"))
+                {
+                    AutoRegisterTemplate = true
+                }));
             container.RegisterLoggedType<IDummy, Dummy>();
-            container.RegisterInstance(log);
             container.Resolve<IDummy>().ReturnStuff(1, "a");
             container.Resolve<IDummy>().DoStuff();
             try { container.Resolve<IDummy>().ThrowException(); }

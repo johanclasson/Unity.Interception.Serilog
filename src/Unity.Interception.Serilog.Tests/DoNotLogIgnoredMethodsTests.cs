@@ -9,7 +9,7 @@ namespace Unity.Interception.Serilog.Tests
         public DoNotLogIgnoredMethodsTests()
         {
             GivenThereExistsAContainer()
-                .WithAnInformationLogger()
+                .WithConfiguredSerilog()
                 .WithADummyTypeRegistered();
             WhenDummyIsResolvedAnd().DoSecretStuff();
         }
@@ -17,7 +17,7 @@ namespace Unity.Interception.Serilog.Tests
         [Fact]
         public void ThenNoInformationMessageShouldBeLogged()
         {
-            Log["Information"].Count.Should().Be(0);
+            Log.Count.Should().Be(0);
         }
     }
 }

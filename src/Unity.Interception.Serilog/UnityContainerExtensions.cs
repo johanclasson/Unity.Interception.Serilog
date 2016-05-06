@@ -1,11 +1,22 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Microsoft.Practices.Unity;
 using Microsoft.Practices.Unity.InterceptionExtension;
+using Serilog;
 
 namespace Unity.Interception.Serilog
 {
     public static class UnityContainerExtensions
     {
+        public static IUnityContainer ConfigureSerilog(this IUnityContainer container, Action<LoggerConfiguration> configureLogger)
+        {
+            var configuration = new LoggerConfiguration();
+            configureLogger(configuration);
+            ILogger logger = configuration.CreateLogger();
+            container.RegisterInstance(logger);
+            return container;
+        }
+
         public static IUnityContainer RegisterLoggedType<TFrom, TTo>(this IUnityContainer container,
             params InjectionMember[] injectionMembers) where TTo : TFrom
         {

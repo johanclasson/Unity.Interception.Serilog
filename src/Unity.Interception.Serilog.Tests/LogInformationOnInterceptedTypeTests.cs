@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
+using Serilog.Events;
 using Unity.Interception.Serilog.Tests.Support;
 using Xunit;
 
@@ -8,43 +10,41 @@ namespace Unity.Interception.Serilog.Tests
 {
     public class LogInformationOnInterceptedTypeTests : TestBase
     {
-        private const string ExpectedMessage = "Method {Method} called with arguments {@Arguments} returned {@Result} after {Duration}";
-        private const string ExpectedMethod = "Unity.Interception.Serilog.Tests.Support.IDummy.ReturnStuff";
+        private const string ExpectedMessage =
+            "Method {Method} called with arguments {@Arguments} returned {@Result} after {Duration}";
 
         public LogInformationOnInterceptedTypeTests()
         {
             GivenThereExistsAContainer()
-                .WithAnInformationLogger()
+                .WithConfiguredSerilog()
                 .WithAStopWatch()
                 .WithADummyTypeRegistered();
             WhenDummyIsResolvedAnd().ReturnStuff(1, "b");
         }
 
-        [Fact]
-        public void ThenAnInformationWithExpectedMessageShouldBeLogged()
+        public void ThenOneInformationLogShouldBeLogged()
         {
-            Log["Error"].Count.Should().Be(0);
-            Log["Information"]
-                .Select(l => l.Message)
-                .Should()
-                .BeEquivalentTo(ExpectedMessage);
+            Log.Single().Level.Should().Be(LogEventLevel.Information);
         }
 
         [Fact]
-        public void ThenAnInformationWithExpectedArgumentsShouldBeLogged()
+        public void ThenAnInformationWithExpectedMessageShouldBeLogged()
         {
-            var parameters = Log["Information"].Select(l => l.Parameters).First();
-            parameters.ShouldBeEquivalentTo(new object[]
+            Log.Single().Message.Should().Be(ExpectedMessage);
+        }
+
+        [Fact]
+        public void ThenAnInformationWithExpectedPropertiesShouldBeLogged()
+        {
+            var properties = Log.Single().Properties;
+            properties["Method"].Should().Be("Unity.Interception.Serilog.Tests.Support.IDummy.ReturnStuff");
+            properties["Arguments"].ShouldBeEquivalentTo(new Dictionary<string, object>()
             {
-                ExpectedMethod,
-                new object[]
-                {
-                    new {Name = "a", Value = "1"},
-                    new {Name = "b", Value = "b"}
-                },
-                "1 b",
-                TimeSpan.FromSeconds(2)
+                ["a"] = "1",
+                ["b"] = "b"
             });
+            properties["Result"].Should().Be("1 b");
+            properties["Duration"].Should().Be(TimeSpan.FromSeconds(2));
         }
     }
 }

@@ -7,12 +7,10 @@ namespace Unity.Interception.Serilog.Tests
 {
     public class LogWithoutReturnOrParameterTypesTests : TestBase
     {
-        private const string ExpectedMessage = "Method {Method} ran for {Duration}";
-
         public LogWithoutReturnOrParameterTypesTests()
         {
             GivenThereExistsAContainer()
-                .WithAnInformationLogger()
+                .WithConfiguredSerilog()
                 .WithADummyTypeRegistered();
             WhenDummyIsResolvedAnd().DoStuff();
         }
@@ -20,10 +18,7 @@ namespace Unity.Interception.Serilog.Tests
         [Fact]
         public void ThenAnInformationWithExpectedMessageShouldBeLogged()
         {
-            Log["Information"]
-                .Select(l => l.Message)
-                .Should()
-                .BeEquivalentTo(ExpectedMessage);
+            Log.Single().Message.Should().Be("Method {Method} ran for {Duration}");
         }
     }
 }

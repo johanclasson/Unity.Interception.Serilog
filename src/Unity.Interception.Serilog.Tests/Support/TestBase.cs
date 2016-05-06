@@ -8,7 +8,7 @@ namespace Unity.Interception.Serilog.Tests.Support
     {
         private ContainerBuilder _builder;
 
-        protected Dictionary<string, List<LogEntry>> Log => _builder.Log;
+        protected IReadOnlyCollection<LogEntry> Log => _builder.Log;
 
         protected ContainerBuilder GivenThereExistsAContainer()
         {

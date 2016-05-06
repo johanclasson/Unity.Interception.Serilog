@@ -10,7 +10,7 @@ namespace Unity.Interception.Serilog.Tests
         public LogInformationOnInterceptedInstanceTests()
         {
             GivenThereExistsAContainer()
-                .WithAnInformationLogger()
+                .WithConfiguredSerilog()
                 .WithADummyInstanceRegistered();
             WhenDummyIsResolvedAnd().ReturnStuff(1, "b");
         }
@@ -18,7 +18,7 @@ namespace Unity.Interception.Serilog.Tests
         [Fact]
         public void ThenAnInformationMessageShouldBeLogged()
         {
-            Log["Information"].Count.Should().Be(1);
+            Log.Count.Should().Be(1);
         }
     }
 }
