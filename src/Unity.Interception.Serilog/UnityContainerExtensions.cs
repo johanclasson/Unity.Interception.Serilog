@@ -9,15 +9,13 @@ namespace Unity.Interception.Serilog
     public static class UnityContainerExtensions
     {
         public static IUnityContainer ConfigureSerilog(this IUnityContainer container, Action<LoggerConfiguration> configureLogger,
-            SerilogOptions options = null)
+            params Type[] expectedExceptions)
         {
             var configuration = new LoggerConfiguration();
             configureLogger(configuration);
             ILogger logger = configuration.CreateLogger();
             container.RegisterInstance(logger);
-            if (options == null)
-                options = new SerilogOptions();
-            container.RegisterInstance<ISerilogOptions>(options);
+            container.RegisterInstance<ISerilogOptions>(new SerilogOptions(expectedExceptions));
             return container;
         }
 

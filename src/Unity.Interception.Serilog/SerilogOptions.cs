@@ -8,8 +8,13 @@ namespace Unity.Interception.Serilog
         IEnumerable<Type> ExpectedExceptions { get; set; }
     }
 
-    public class SerilogOptions : ISerilogOptions
+    internal class SerilogOptions : ISerilogOptions
     {
-        public IEnumerable<Type> ExpectedExceptions { get; set; } = new Type[0];
+        public SerilogOptions(IEnumerable<Type> expectedExceptions)
+        {
+            ExpectedExceptions = expectedExceptions ?? new Type[0];
+        }
+
+        public IEnumerable<Type> ExpectedExceptions { get; set; }
     }
 }
