@@ -11,10 +11,10 @@ namespace Unity.Interception.Serilog.Tests.Support
         public UnityContainer Container { get; } = new UnityContainer();
         public IReadOnlyCollection<LogEntry> Log => _loggerMock.Log;
 
-        public ContainerBuilder WithConfiguredSerilog()
+        public ContainerBuilder WithConfiguredSerilog(SerilogOptions options = null)
         {
             _loggerMock = new LoggerMock();
-            Container.ConfigureSerilog(c => c.WriteTo.Logger(_loggerMock.Object));
+            Container.ConfigureSerilog(c => c.WriteTo.Logger(_loggerMock.Object), options);
             return this;
         }
 

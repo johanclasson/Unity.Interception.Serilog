@@ -9,8 +9,6 @@ namespace Unity.Interception.Serilog.Tests
 {
     public class LogErrorOnInterceptedTypeTests : TestBase
     {
-        private const string ExpectedMessage = "Method {Method} failed after {Duration}";
-
         public LogErrorOnInterceptedTypeTests()
         {
             GivenThereExistsAContainer()
@@ -29,7 +27,7 @@ namespace Unity.Interception.Serilog.Tests
         [Fact]
         public void ThenAnErrorWithExpectedMessageShouldBeLogged()
         {
-            Log.Single().Message.Should().Be(ExpectedMessage);
+            Log.Single().Message.Should().Be("Method {Method} failed after {Duration}");
         }
 
         [Fact]

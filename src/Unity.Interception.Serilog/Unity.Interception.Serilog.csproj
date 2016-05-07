@@ -75,6 +75,7 @@
     <Compile Include="CustomAttributesExtensions.cs" />
     <Compile Include="LoggingInterceptionBehavior.cs" />
     <Compile Include="MessageBuilder.cs" />
+    <Compile Include="SerilogOptions.cs" />
     <Compile Include="Stopwatch.cs" />
     <Compile Include="UnityContainerExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
