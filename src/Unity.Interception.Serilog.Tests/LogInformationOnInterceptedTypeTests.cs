@@ -10,9 +10,6 @@ namespace Unity.Interception.Serilog.Tests
 {
     public class LogInformationOnInterceptedTypeTests : TestBase
     {
-        private const string ExpectedMessage =
-            "Method {Method} called with arguments {@Arguments} returned {@Result} after {Duration}";
-
         public LogInformationOnInterceptedTypeTests()
         {
             GivenThereExistsAContainer()
@@ -30,7 +27,7 @@ namespace Unity.Interception.Serilog.Tests
         [Fact]
         public void ThenAnInformationWithExpectedMessageShouldBeLogged()
         {
-            Log.Single().Message.Should().Be(ExpectedMessage);
+            Log.Single().Message.Should().Be("Method {Method} called with arguments {@Arguments} returned {@Result} after {Duration}");
         }
 
         [Fact]

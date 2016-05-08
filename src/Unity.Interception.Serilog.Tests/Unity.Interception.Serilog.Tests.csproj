@@ -110,6 +110,7 @@
     <Compile Include="LogErrorOnInterceptedTypeTests.cs" />
     <Compile Include="LogInformationOnInterceptedInstanceTests.cs" />
     <Compile Include="LogInformationOnInterceptedTypeTests.cs" />
+    <Compile Include="LogsShouldBeEnrichedWithThreadId.cs" />
     <Compile Include="LogWithoutReturnOrParameterTypesTests.cs" />
     <Compile Include="LogInformationAfterMultipleRegistrationsTests.cs" />
     <Compile Include="NullTests.cs" />

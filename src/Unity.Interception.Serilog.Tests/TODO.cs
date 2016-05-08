@@ -1,9 +1,5 @@
 ﻿
 //TODO: Only Exception or Logging - LogLevel on options
-//TODO: Enrich logs with thread id - https://github.com/serilog/serilog/wiki/Configuration-Basics - Properties that are not mentioned in the message is not logged!
-/*
- * Or just include it with all logs to begin with... Together with Computername. Any more?
- */
 
 //TODO: Does timespan work with kibana?
 //TODO: Consider good practices at http://blachniet.com/blog/serilog-good-habits/

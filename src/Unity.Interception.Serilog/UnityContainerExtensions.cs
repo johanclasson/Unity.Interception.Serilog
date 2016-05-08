@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using Microsoft.Practices.Unity;
 using Microsoft.Practices.Unity.InterceptionExtension;
 using Serilog;
@@ -13,6 +14,7 @@ namespace Unity.Interception.Serilog
         {
             var configuration = new LoggerConfiguration();
             configureLogger(configuration);
+            configuration.Enrich.WithProperty("ManagedThreadId", Thread.CurrentThread.ManagedThreadId); //TODO: Is this the same property that TS.Framework use?
             ILogger logger = configuration.CreateLogger();
             container.RegisterInstance(logger);
             container.RegisterInstance<ISerilogOptions>(new SerilogOptions(expectedExceptions));

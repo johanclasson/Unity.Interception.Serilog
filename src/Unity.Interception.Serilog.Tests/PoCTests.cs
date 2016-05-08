@@ -17,7 +17,7 @@ namespace Unity.Interception.Serilog.Tests
                 c => c.WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://localhost:9200"))
                 {
                     AutoRegisterTemplate = true
-                }));
+                }), typeof(InvalidOperationException));
             container.RegisterLoggedType<IDummy, Dummy>();
             container.Resolve<IDummy>().ReturnStuff(1, "a");
             container.Resolve<IDummy>().DoStuff();
