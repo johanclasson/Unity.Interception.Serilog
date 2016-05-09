@@ -27,7 +27,7 @@ namespace Unity.Interception.Serilog.Tests
         [Fact]
         public void ThenAnInformationWithExpectedMessageShouldBeLogged()
         {
-            Log.Single().Message.Should().Be("Method Unity.Interception.Serilog.Tests.Support.IDummy.ReturnStuff returned");
+            Log.Single().Message.Should().Be("Method \"ReturnStuff\" returned");
         }
 
         [Fact]

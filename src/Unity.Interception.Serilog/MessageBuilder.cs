@@ -43,10 +43,10 @@ namespace Unity.Interception.Serilog
 
         private StringBuilder AddMethod()
         {
-            var sb = new StringBuilder("Method {SourceContext:l}.{EventId:l}");
+            var sb = new StringBuilder("Method {EventId}");
             var c = new MethodNameConverter(_input);
-            _propertyValues.Add(c.SourceContext);
             _propertyValues.Add(c.EventId);
+            Logger = Logger.ForContext("SourceContext", c.SourceContext);
             sb.Append(IsFailedResult ? " failed" : " returned");
             return sb;
         }

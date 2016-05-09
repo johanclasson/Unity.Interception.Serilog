@@ -28,7 +28,7 @@ namespace Unity.Interception.Serilog.Tests
         [Fact]
         public void ThenAnErrorWithExpectedMessageShouldBeLogged()
         {
-            Log.Single().Message.Should().Be("Method Unity.Interception.Serilog.Tests.Support.IDummy.ThrowException failed");
+            Log.Single().Message.Should().Be("Method \"ThrowException\" failed");
         }
 
         [Fact]

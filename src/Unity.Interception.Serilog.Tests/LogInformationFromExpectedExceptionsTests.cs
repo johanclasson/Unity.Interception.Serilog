@@ -23,7 +23,7 @@ namespace Unity.Interception.Serilog.Tests
         {
             var entry = Log.Single();
             entry.Level.Should().Be(LogEventLevel.Information);
-            entry.Message.Should().Be("Method Unity.Interception.Serilog.Tests.Support.IDummy.ThrowException failed");
+            entry.Message.Should().Be("Method \"ThrowException\" failed");
         }
     }
 }
