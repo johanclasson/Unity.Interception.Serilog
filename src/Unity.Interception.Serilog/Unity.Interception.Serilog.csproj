@@ -72,8 +72,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommonPropertiesEnricher.cs" />
     <Compile Include="CustomAttributesExtensions.cs" />
     <Compile Include="CommonProperties.cs" />
+    <Compile Include="LoggerExtensions.cs" />
     <Compile Include="LoggingInterceptionBehavior.cs" />
     <Compile Include="MessageBuilder.cs" />
     <Compile Include="MethodIdentifier.cs" />

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Threading;
 using Microsoft.Practices.Unity;
 using Microsoft.Practices.Unity.InterceptionExtension;
 using Serilog;
@@ -15,12 +14,7 @@ namespace Unity.Interception.Serilog
             var configuration = new LoggerConfiguration();
             configureLogger(configuration);
             var properties = GetProperties(container);
-            configuration.Enrich.WithProperty("ManagedThreadId", properties.ManagedThreadId);
-            configuration.Enrich.WithProperty("MachineName", properties.MachineName);
-            configuration.Enrich.WithProperty("ProcessId", properties.ProcessId);
-            configuration.Enrich.WithProperty("ProcessName", properties.ProcessName);
-            configuration.Enrich.WithProperty("ThreadName", properties.ThreadName);
-            configuration.Enrich.WithProperty("AppDomainName", properties.AppDomainName);
+            configuration.Enrich.With(new CommonPropertiesEnricher(properties));
             ILogger logger = configuration.CreateLogger();
             container.RegisterInstance(logger);
             container.RegisterInstance<ISerilogOptions>(new SerilogOptions(expectedExceptions, ignoredMethods));

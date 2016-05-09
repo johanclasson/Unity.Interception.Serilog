@@ -9,7 +9,7 @@ namespace Unity.Interception.Serilog.Tests
 {
     public class PoCTests
     {
-        [Fact(Skip = "PoC")]
+        [Fact] //(Skip = "PoC")]
         public void ShouldLogArgumentsToElasticsearch()
         {
             var container = new UnityContainer();
@@ -33,6 +33,8 @@ namespace Unity.Interception.Serilog.Tests
             {
                 // ignored
             }
+            // Flush periodic batching queue
+            container.Resolve<ILogger>().Dispose();
 
             // Examine log manually
         }
