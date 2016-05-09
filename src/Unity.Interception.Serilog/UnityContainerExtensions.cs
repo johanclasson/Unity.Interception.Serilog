@@ -10,15 +10,30 @@ namespace Unity.Interception.Serilog
     public static class UnityContainerExtensions
     {
         public static IUnityContainer ConfigureSerilog(this IUnityContainer container, Action<LoggerConfiguration> configureLogger,
-            params Type[] expectedExceptions)
+            Type[] expectedExceptions = null, MethodIdentifier[] ignoredMethods = null)
         {
             var configuration = new LoggerConfiguration();
             configureLogger(configuration);
-            configuration.Enrich.WithProperty("ManagedThreadId", Thread.CurrentThread.ManagedThreadId); //TODO: Is this the same property that TS.Framework use?
+            var properties = GetProperties(container);
+            configuration.Enrich.WithProperty("ManagedThreadId", properties.ManagedThreadId);
+            configuration.Enrich.WithProperty("MachineName", properties.MachineName);
+            configuration.Enrich.WithProperty("ProcessId", properties.ProcessId);
+            configuration.Enrich.WithProperty("ProcessName", properties.ProcessName);
+            configuration.Enrich.WithProperty("ThreadName", properties.ThreadName);
+            configuration.Enrich.WithProperty("AppDomainName", properties.AppDomainName);
             ILogger logger = configuration.CreateLogger();
             container.RegisterInstance(logger);
-            container.RegisterInstance<ISerilogOptions>(new SerilogOptions(expectedExceptions));
+            container.RegisterInstance<ISerilogOptions>(new SerilogOptions(expectedExceptions, ignoredMethods));
             return container;
+        }
+
+        private static ICommonProperties GetProperties(IUnityContainer container)
+        {
+            if (!container.IsRegistered<ICommonProperties>())
+            {
+                container.RegisterType<ICommonProperties, CommonProperties>(new ContainerControlledLifetimeManager());
+            }
+            return container.Resolve<ICommonProperties>();
         }
 
         public static IUnityContainer RegisterLoggedType<TFrom, TTo>(this IUnityContainer container,

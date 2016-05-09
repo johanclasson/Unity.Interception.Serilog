@@ -73,8 +73,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomAttributesExtensions.cs" />
+    <Compile Include="CommonProperties.cs" />
     <Compile Include="LoggingInterceptionBehavior.cs" />
     <Compile Include="MessageBuilder.cs" />
+    <Compile Include="MethodIdentifier.cs" />
+    <Compile Include="MethodNameConverter.cs" />
     <Compile Include="SerilogOptions.cs" />
     <Compile Include="Stopwatch.cs" />
     <Compile Include="UnityContainerExtensions.cs" />

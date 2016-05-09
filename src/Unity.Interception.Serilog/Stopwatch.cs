@@ -9,6 +9,7 @@ namespace Unity.Interception.Serilog
         TimeSpan Elapsed { get; }
     }
 
+    // ReSharper disable once ClassNeverInstantiated.Global - Unity
     internal class Stopwatch : System.Diagnostics.Stopwatch, IStopWatch
     {
     }

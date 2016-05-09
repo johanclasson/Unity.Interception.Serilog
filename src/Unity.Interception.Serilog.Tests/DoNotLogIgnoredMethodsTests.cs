@@ -9,8 +9,11 @@ namespace Unity.Interception.Serilog.Tests
         public DoNotLogIgnoredMethodsTests()
         {
             GivenThereExistsAContainer()
-                .WithConfiguredSerilog()
+                .WithConfiguredSerilog(ignoredMethods: new[] {new MethodIdentifier(typeof (IDummy), nameof(IDummy.DoStuff))})
                 .WithADummyTypeRegistered();
+            //Method which is ignored by type and name
+            WhenDummyIsResolvedAnd().DoStuff();
+            //Method which is ignored by attribute
             WhenDummyIsResolvedAnd().DoSecretStuff();
         }
 

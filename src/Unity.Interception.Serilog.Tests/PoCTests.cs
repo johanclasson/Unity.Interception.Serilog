@@ -13,15 +13,22 @@ namespace Unity.Interception.Serilog.Tests
         public void ShouldLogArgumentsToElasticsearch()
         {
             var container = new UnityContainer();
-            container.ConfigureSerilog(
-                c => c.WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://localhost:9200"))
-                {
-                    AutoRegisterTemplate = true
-                }), typeof(InvalidOperationException));
-            container.RegisterLoggedType<IDummy, Dummy>();
+            container
+                .ConfigureSerilog(
+                    c =>
+                    {
+                        c.WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://localhost:9200"))
+                        {
+                            AutoRegisterTemplate = true
+                        });
+                    }, expectedExceptions: new[] {typeof (InvalidOperationException)})
+                .RegisterLoggedType<IDummy, Dummy>();
             container.Resolve<IDummy>().ReturnStuff(1, "a");
             container.Resolve<IDummy>().DoStuff();
-            try { container.Resolve<IDummy>().ThrowException(); }
+            try
+            {
+                container.Resolve<IDummy>().ThrowException();
+            }
             catch (Exception)
             {
                 // ignored

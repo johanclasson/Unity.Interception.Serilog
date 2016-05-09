@@ -7,6 +7,7 @@ using Serilog.Events;
 
 namespace Unity.Interception.Serilog
 {
+    // ReSharper disable once ClassNeverInstantiated.Global - Unity
     internal class LoggingInterceptionBehavior : IInterceptionBehavior
     {
         private readonly ILogger _logger;
@@ -48,7 +49,9 @@ namespace Unity.Interception.Serilog
 
         private bool IgnoreMethod(IMethodInvocation input)
         {
-            return input.MethodBase.CustomAttributes.ContainsIgnoreAttribute();
+            var c = new MethodNameConverter(input);
+            bool ignoredByMethodIdentifier = _options.IgnoredMethods.Any(m => m.Type.FullName == c.SourceContext && m.MethodName == c.EventId);
+            return ignoredByMethodIdentifier || input.MethodBase.CustomAttributes.ContainsIgnoreAttribute();
         }
 
         public IEnumerable<Type> GetRequiredInterfaces() => Type.EmptyTypes;

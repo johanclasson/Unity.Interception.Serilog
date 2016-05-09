@@ -46,8 +46,9 @@ namespace Unity.Interception.Serilog
         private StringBuilder AddMethod()
         {
             var sb = new StringBuilder("Method {SourceContext:l}.{EventId:l}");
-            _propertyValues.Add(SourceContext);
-            _propertyValues.Add(EventId);
+            var c = new MethodNameConverter(_input);
+            _propertyValues.Add(c.SourceContext);
+            _propertyValues.Add(c.EventId);
             sb.Append(IsFailedResult ? " failed" : " returned");
             return sb;
         }
@@ -71,10 +72,6 @@ namespace Unity.Interception.Serilog
         }
 
         private bool IsFailedResult => _result.Exception != null;
-
-        private string EventId => _input?.MethodBase?.Name;
-
-        private string SourceContext => _input?.MethodBase?.ReflectedType?.FullName;
 
         private IEnumerable<object> GetArguments()
         {

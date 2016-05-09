@@ -12,7 +12,7 @@ namespace Unity.Interception.Serilog.Tests
         public LogInformationFromExpectedExceptionsTests()
         {
             GivenThereExistsAContainer()
-                .WithConfiguredSerilog(typeof (InvalidOperationException))
+                .WithConfiguredSerilog(expectedExceptions: new []{ typeof(InvalidOperationException) })
                 .WithADummyTypeRegistered();
             Action a = () => WhenDummyIsResolvedAnd().ThrowException();
             a.ShouldThrow<InvalidOperationException>();
