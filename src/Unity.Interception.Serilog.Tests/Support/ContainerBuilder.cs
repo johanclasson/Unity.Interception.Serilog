@@ -34,8 +34,8 @@ namespace Unity.Interception.Serilog.Tests.Support
             return this;
         }
 
-        public ContainerBuilder WithFakeCommonProperties(int managedThreadId, string machineName,
-            int processId, string processName, string threadName, string appDomainName)
+        public ContainerBuilder WithFakeCommonProperties(int managedThreadId = 0, string machineName = null,
+            int processId = 0, string processName = null, string threadName = null, string appDomainName = null)
         {
             var mock = new Mock<ICommonProperties>();
             mock.SetupGet(m => m.ManagedThreadId).Returns(managedThreadId);

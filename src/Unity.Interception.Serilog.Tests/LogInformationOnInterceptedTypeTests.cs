@@ -18,6 +18,7 @@ namespace Unity.Interception.Serilog.Tests
             WhenDummyIsResolvedAnd().ReturnStuff(1, "b");
         }
 
+        [Fact]
         public void ThenOneInformationLogShouldBeLogged()
         {
             Log.Single().Level.Should().Be(LogEventLevel.Information);

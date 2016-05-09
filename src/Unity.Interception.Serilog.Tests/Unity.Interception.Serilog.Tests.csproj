@@ -111,6 +111,7 @@
     <Compile Include="LogInformationOnInterceptedInstanceTests.cs" />
     <Compile Include="LogInformationOnInterceptedTypeTests.cs" />
     <Compile Include="LogsShouldBeEnriched.cs" />
+    <Compile Include="LogsShouldNotBeEnrichedWithNullData.cs" />
     <Compile Include="LogWithoutReturnOrParameterTypesTests.cs" />
     <Compile Include="LogInformationAfterMultipleRegistrationsTests.cs" />
     <Compile Include="NullTests.cs" />
@@ -122,7 +123,6 @@
     <Compile Include="Support\LogEntry.cs" />
     <Compile Include="Support\LoggerMock.cs" />
     <Compile Include="Support\TestBase.cs" />
-    <Compile Include="TODO.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

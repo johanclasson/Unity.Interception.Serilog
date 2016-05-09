@@ -5,6 +5,7 @@ namespace Unity.Interception.Serilog.Tests.Support
 {
     public interface IDummy
     {
+        // ReSharper disable once UnusedMethodReturnValue.Global - Logged through interception
         string ReturnStuff(int a, string b);
 
         void DoStuff();
@@ -12,8 +13,11 @@ namespace Unity.Interception.Serilog.Tests.Support
         [IgnoreMember]
         void DoSecretStuff();
 
+        // ReSharper disable UnusedParameter.Global - Logged through interception
         void DoStuffWithSecretParameter(string username, [IgnoreMember] string password);
+        // ReSharper restore UnusedParameter.Global
 
+        // ReSharper disable once UnusedMethodReturnValue.Global - Logged through interception
         int ThrowException();
     }
 

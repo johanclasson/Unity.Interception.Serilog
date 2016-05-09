@@ -19,6 +19,7 @@ namespace Unity.Interception.Serilog.Tests
             a.ShouldThrow<InvalidOperationException>();
         }
 
+        [Fact]
         public void ThenOneErrorLogShouldBeLogged()
         {
             Log.Single().Level.Should().Be(LogEventLevel.Error);

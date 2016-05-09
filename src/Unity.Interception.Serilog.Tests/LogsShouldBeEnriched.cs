@@ -17,32 +17,32 @@ namespace Unity.Interception.Serilog.Tests
         }
 
         [Fact]
-        public void ThenAllLogsShouldHaveManagedThreadIdProperty()
+        public void ThenLogsShouldHaveManagedThreadIdProperty()
         {
             Log.Single().Properties["ManagedThreadId"].Should().Be(1);
         }
         [Fact]
-        public void ThenAllLogsShouldHaveMachineNameProperty()
+        public void ThenLogsShouldHaveMachineNameProperty()
         {
             Log.Single().Properties["MachineName"].Should().Be("m1");
         }
         [Fact]
-        public void ThenAllLogsShouldHaveProcessIdProperty()
+        public void ThenLogsShouldHaveProcessIdProperty()
         {
             Log.Single().Properties["ProcessId"].Should().Be(2);
         }
         [Fact]
-        public void ThenAllLogsShouldHaveProcessNameProperty()
+        public void ThenLogsShouldHaveProcessNameProperty()
         {
             Log.Single().Properties["ProcessName"].Should().Be("p1");
         }
         [Fact]
-        public void ThenAllLogsShouldHaveThreadNameProperty()
+        public void ThenLogsShouldHaveThreadNameProperty()
         {
             Log.Single().Properties["ThreadName"].Should().Be("t1");
         }
         [Fact]
-        public void ThenAllLogsShouldHaveAppDomainNameProperty()
+        public void ThenLogsShouldHaveAppDomainNameProperty()
         {
             Log.Single().Properties["AppDomainName"].Should().Be("a1");
         }

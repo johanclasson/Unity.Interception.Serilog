@@ -41,8 +41,6 @@ namespace Unity.Interception.Serilog
             Logger = Logger.ForContext("ExceptionType", _result.Exception.GetType().FullName);
         }
 
-        public object[] Arguments => GetArguments().ToArray();
-
         private StringBuilder AddMethod()
         {
             var sb = new StringBuilder("Method {SourceContext:l}.{EventId:l}");

@@ -9,7 +9,7 @@ namespace Unity.Interception.Serilog.Tests
 {
     public class PoCTests
     {
-        [Fact] //(Skip = "PoC")]
+        [Fact(Skip = "PoC")]
         public void ShouldLogArgumentsToElasticsearch()
         {
             var container = new UnityContainer();
@@ -19,7 +19,7 @@ namespace Unity.Interception.Serilog.Tests
                     {
                         c.WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://localhost:9200"))
                         {
-                            AutoRegisterTemplate = true
+                            IndexFormat = "poc-{0:yyyy.MM.dd}"
                         });
                     }, expectedExceptions: new[] {typeof (InvalidOperationException)})
                 .RegisterLoggedType<IDummy, Dummy>();
@@ -33,8 +33,6 @@ namespace Unity.Interception.Serilog.Tests
             {
                 // ignored
             }
-            // Flush periodic batching queue
-            container.Resolve<ILogger>().Dispose();
 
             // Examine log manually
         }
