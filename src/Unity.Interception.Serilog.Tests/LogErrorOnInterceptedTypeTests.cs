@@ -37,6 +37,7 @@ namespace Unity.Interception.Serilog.Tests
             properties["SourceContext"].Should().Be("Unity.Interception.Serilog.Tests.Support.IDummy");
             properties["EventId"].Should().Be("ThrowException");
             properties["Duration"].Should().Be(2000.0);
+            properties["ExceptionType"].Should().Be("System.InvalidOperationException");
         }
 
         [Fact]

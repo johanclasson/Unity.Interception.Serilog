@@ -30,7 +30,15 @@ namespace Unity.Interception.Serilog
             var sb = AddMethod();
             AddArguments();
             AddResultAndDuration();
+            AddExceptionType();
             return sb.ToString();
+        }
+
+        private void AddExceptionType()
+        {
+            if (_result.Exception == null)
+                return;
+            Logger = Logger.ForContext("ExceptionType", _result.Exception.GetType().FullName);
         }
 
         public object[] Arguments => GetArguments().ToArray();
