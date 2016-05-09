@@ -27,15 +27,16 @@ namespace Unity.Interception.Serilog.Tests
         [Fact]
         public void ThenAnErrorWithExpectedMessageShouldBeLogged()
         {
-            Log.Single().Message.Should().Be("Method {Method} failed after {Duration}");
+            Log.Single().Message.Should().Be("Method Unity.Interception.Serilog.Tests.Support.IDummy.ThrowException failed");
         }
 
         [Fact]
         public void ThenAnErrorWithExpectedPropertiesShouldBeLogged()
         {
             var properties = Log.Single().Properties;
-            properties["Method"].Should().Be("Unity.Interception.Serilog.Tests.Support.IDummy.ThrowException");
-            properties["Duration"].Should().Be(TimeSpan.FromSeconds(2));
+            properties["SourceContext"].Should().Be("Unity.Interception.Serilog.Tests.Support.IDummy");
+            properties["EventId"].Should().Be("ThrowException");
+            properties["Duration"].Should().Be(2000.0);
         }
 
         [Fact]

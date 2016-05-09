@@ -27,21 +27,22 @@ namespace Unity.Interception.Serilog.Tests
         [Fact]
         public void ThenAnInformationWithExpectedMessageShouldBeLogged()
         {
-            Log.Single().Message.Should().Be("Method {Method} called with arguments {@Arguments} returned {@Result} after {Duration}");
+            Log.Single().Message.Should().Be("Method Unity.Interception.Serilog.Tests.Support.IDummy.ReturnStuff returned");
         }
 
         [Fact]
         public void ThenAnInformationWithExpectedPropertiesShouldBeLogged()
         {
             var properties = Log.Single().Properties;
-            properties["Method"].Should().Be("Unity.Interception.Serilog.Tests.Support.IDummy.ReturnStuff");
+            properties["SourceContext"].Should().Be("Unity.Interception.Serilog.Tests.Support.IDummy");
+            properties["EventId"].Should().Be("ReturnStuff");
             properties["Arguments"].ShouldBeEquivalentTo(new Dictionary<string, object>()
             {
                 ["a"] = "1",
                 ["b"] = "b"
             });
             properties["Result"].Should().Be("1 b");
-            properties["Duration"].Should().Be(TimeSpan.FromSeconds(2));
+            properties["Duration"].Should().Be(2000.0);
         }
     }
 }

@@ -16,9 +16,11 @@ namespace Unity.Interception.Serilog.Tests
         }
 
         [Fact]
-        public void ThenAnInformationWithExpectedMessageShouldBeLogged()
+        public void ThenAnInformationWithExpectedPropertiesShouldBeLogged()
         {
-            Log.Single().Message.Should().Be("Method {Method} ran for {Duration}");
+            var properties = Log.Single().Properties;
+            properties.Keys.Should().NotContain("Arguments");
+            properties.Keys.Should().NotContain("Result");
         }
     }
 }

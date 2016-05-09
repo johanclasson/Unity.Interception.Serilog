@@ -22,13 +22,14 @@ namespace Unity.Interception.Serilog.Tests
         public void ThenAnInformationWithExpectedPropertiesShouldBeLogged()
         {
             var properties = Log.Single().Properties;
-            properties["Method"].Should().Be("Unity.Interception.Serilog.Tests.Support.IDummy.DoStuffWithSecretParameter");
+            properties["SourceContext"].Should().Be("Unity.Interception.Serilog.Tests.Support.IDummy");
+            properties["EventId"].Should().Be("DoStuffWithSecretParameter");
             properties["Arguments"].ShouldBeEquivalentTo(new Dictionary<string, object>()
             {
                 ["username"] = "username1",
                 ["password"] = "[hidden]"
             });
-            properties["Duration"].Should().Be(TimeSpan.FromSeconds(2));
+            properties["Duration"].Should().Be(2000.0);
         }
     }
 }

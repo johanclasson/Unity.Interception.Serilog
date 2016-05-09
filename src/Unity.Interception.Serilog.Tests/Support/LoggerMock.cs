@@ -24,7 +24,7 @@ namespace Unity.Interception.Serilog.Tests.Support
             {
                 Exception = logEvent.Exception,
                 Properties = properties,
-                Message = logEvent.MessageTemplate.Text,
+                Message = logEvent.RenderMessage(),
                 Level = logEvent.Level
             });
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Practices.Unity.InterceptionExtension;
 using Serilog;
+using Serilog.Events;
 
 namespace Unity.Interception.Serilog
 {
@@ -25,26 +26,24 @@ namespace Unity.Interception.Serilog
             var result = getNext()(input, getNext);
             _stopWatch.Stop();
             if (!IgnoreMethod(input))
-            {
                 LogMethodResult(input, result);
-            }
             return result;
         }
 
         private void LogMethodResult(IMethodInvocation input, IMethodReturn result)
         {
-            var builder = new MessageBuilder(input, result, _stopWatch.Elapsed);
+            var builder = new MessageBuilder(input, result, _stopWatch.Elapsed, _logger);
+            var message = builder.Build();
+            var level = GetLevel(result);
+            builder.Logger.Write(level, result.Exception, message, builder.PropertyValues);
+        }
+
+        private LogEventLevel GetLevel(IMethodReturn result)
+        {
             if (result.Exception == null)
-            {
-                _logger.Information(builder.Build(), builder.PropertyValues);
-                return;
-            }
-            if (_options.ExpectedExceptions.Contains(result.Exception.GetType()))
-            {
-                _logger.Information(result.Exception, builder.Build(), builder.PropertyValues);
-                return;
-            }
-            _logger.Error(result.Exception, builder.Build(), builder.PropertyValues);
+                return LogEventLevel.Information;
+            var expectedException = _options.ExpectedExceptions.Contains(result.Exception.GetType());
+            return expectedException ? LogEventLevel.Information : LogEventLevel.Error;
         }
 
         private bool IgnoreMethod(IMethodInvocation input)

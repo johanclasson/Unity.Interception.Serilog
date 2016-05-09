@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Microsoft.Practices.Unity.InterceptionExtension;
+using Serilog;
 
 namespace Unity.Interception.Serilog
 {
@@ -12,65 +13,60 @@ namespace Unity.Interception.Serilog
         private readonly IMethodInvocation _input;
         private readonly IMethodReturn _result;
         private readonly TimeSpan _duration;
+        public ILogger Logger { get; private set; }
         public object[] PropertyValues => _propertyValues.ToArray();
         private readonly List<object> _propertyValues = new List<object>();
 
-        public MessageBuilder(IMethodInvocation input, IMethodReturn result, TimeSpan duration)
+        public MessageBuilder(IMethodInvocation input, IMethodReturn result, TimeSpan duration, ILogger logger)
         {
             _input = input;
             _result = result;
             _duration = duration;
+            Logger = logger;
         }
 
         public string Build()
         {
             var sb = AddMethod();
-            AddArguments(sb);
-            AddResultAndDuration(sb);
+            AddArguments();
+            AddResultAndDuration();
             return sb.ToString();
         }
 
+        public object[] Arguments => GetArguments().ToArray();
+
         private StringBuilder AddMethod()
         {
-            var sb = new StringBuilder("Method {Method}");
-            _propertyValues.Add(MethodName);
-            if (IsFailedResult)
-                sb.Append(" failed");
+            var sb = new StringBuilder("Method {SourceContext:l}.{EventId:l}");
+            _propertyValues.Add(SourceContext);
+            _propertyValues.Add(EventId);
+            sb.Append(IsFailedResult ? " failed" : " returned");
             return sb;
         }
 
-        private void AddArguments(StringBuilder sb)
+        private void AddArguments()
         {
             object[] arguments = GetArguments().ToArray();
-            if (arguments.Length != 0)
-            {
-                sb.Append(" called with arguments {@Arguments}");
-                _propertyValues.Add(arguments);
-            }
+            if (arguments.Length == 0)
+                return;
+            Logger = Logger.ForContext("Arguments", arguments, destructureObjects: true);
         }
 
-        private void AddResultAndDuration(StringBuilder sb)
+        private void AddResultAndDuration()
         {
+            Logger = Logger.ForContext("Duration", _duration.TotalMilliseconds);
             if (IsFailedResult)
-            {
-                sb.Append(" after {Duration}");
-                _propertyValues.Add(_duration);
                 return;
-            }
             if (_input.MethodBase.ToString().StartsWith("Void "))
-            {
-                sb.Append(" ran for {Duration}");
-                _propertyValues.Add(_duration);
                 return;
-            }
-            sb.Append(" returned {@Result} after {Duration}");
-            _propertyValues.Add(_result.ReturnValue);
-            _propertyValues.Add(_duration);
+            Logger = Logger.ForContext("Result", _result.ReturnValue, destructureObjects: true);
         }
 
         private bool IsFailedResult => _result.Exception != null;
 
-        private string MethodName => $"{_input?.MethodBase?.ReflectedType?.FullName}.{_input?.MethodBase?.Name}";
+        private string EventId => _input?.MethodBase?.Name;
+
+        private string SourceContext => _input?.MethodBase?.ReflectedType?.FullName;
 
         private IEnumerable<object> GetArguments()
         {
