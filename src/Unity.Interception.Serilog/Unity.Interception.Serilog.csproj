@@ -86,6 +86,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Unity.Interception.Serilog.nuspec" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Unity.Interception.Customization\Unity.Interception.Customization.csproj">
