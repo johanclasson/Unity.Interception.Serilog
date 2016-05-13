@@ -20,7 +20,7 @@ namespace Unity.Interception.Serilog.Tests
             };
             foreach (var action in actions)
             {
-                action.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\nParameter name: first");
+                action.ShouldThrow<ArgumentNullException>();
             }
         }
 
@@ -35,7 +35,7 @@ namespace Unity.Interception.Serilog.Tests
             };
             foreach (var action in actions)
             {
-                action.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\nParameter name: container");
+                action.ShouldThrow<ArgumentNullException>();
             }
         }
     }
