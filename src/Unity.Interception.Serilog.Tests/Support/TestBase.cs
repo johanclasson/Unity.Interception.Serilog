@@ -25,5 +25,7 @@ namespace Unity.Interception.Serilog.Tests.Support
         {
             _builder?.Dispose();
         }
+
+        protected string SelfLog => _builder.SelfLogOutput;
     }
 }

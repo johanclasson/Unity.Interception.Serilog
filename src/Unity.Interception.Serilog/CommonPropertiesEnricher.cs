@@ -25,6 +25,8 @@ namespace Unity.Interception.Serilog
 
         private static void Add<T>(LogEvent logEvent, ILogEventPropertyFactory propertyFactory, string name, T value, T defaultValue) where T : IComparable
         {
+            if (value == null)
+                return;
             if (value.CompareTo(defaultValue) != 0)
                 logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(name, value));
         }
