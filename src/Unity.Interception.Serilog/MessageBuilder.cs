@@ -66,7 +66,7 @@ namespace Unity.Interception.Serilog
                 return;
             if (_input.MethodBase.ToString().StartsWith("Void "))
                 return;
-            Logger = Logger.ForContext("Result", _result.ReturnValue, destructureObjects: true);
+            Logger = Logger.ForContext("Result", _result.ReturnValue);
         }
 
         private bool IsFailedResult => _result.Exception != null;
