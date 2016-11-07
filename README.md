@@ -1,16 +1,22 @@
 # Unity.Interception.Serilog
 
-## Vad är Unity.Interception.Serilog?
+Types which are registered to the Unity Container with the `RegisterLoggedType` method are decorated with a logging behavior. The logs which are produced contains information about the respective types method invocations such as execution time, arguments and result, and are persisted though the Serilog ILogger-adapter.
 
-Med hjälp av Unity.Interception så dekoreras registrerade typer med loggning. Loggarna innehåller information om anropen så som exempelvis exekveringstid, argument och resultat, och persisteras via Serilogs ILogger. All loggning via ILogger berikas med en samling fält som beskriver miljön där loggningen har skett.
+In addition, all logging through the configured ILogger instance are enriched with properties describing the environment where the logging event occurred.
 
-![Unity.Iterception.Serilog](doc/Unity.Interception.Serilog.png)
+![Unity.Interception.Serilog](doc/overview.png)
 
-*Översikt av Unity.Iterception.Serilog*
+*Overview of Unity.Interception.Serilog*
 
-## Konfiguration
+## Configuration
 
-Via extension-metoden `ConfigureSerilog` registreras Serilogs `ILogger` i containern och dess `LoggerConfiguration` exponeras via en `Action`-parameter. Möjlighet att konfigurera förväntade exceptions samt metoder som ska undantas från loggning finns också.
+The logging is set up by calling the `ConfigureSerilog` extension method on a container, and either pass in a `LoggerConfiguration` instance or use the overload with an action `Action` parameter where the `LoggerConfiguration` is created for you.
+
+The `ConfigureSerilog` method registers an `ILogger` instance in the container, so it's important that the `LoggerConfiguration` is configured before.
+
+Thrown exceptions are logged as errors by default, but it is possible to configure a list of expected exceptions which are then logged as information instead.
+
+It is also possible to ignore methods from being logged at all, by passing a list of `MethodIdentifier`s.
 
 ```charp
 using Unity.Interception.Serilog;
@@ -22,9 +28,11 @@ container
     .ConfigureSerilog(c => c.WriteTo.Xyz(...), expectedExceptions, ignoredMethods);
 ``` 
 
-Konfigurationen av Serilog görs i exemplet via `c.WriteTo.Xyz(...)` och ersätts med den sink som man vill använda istället. För `Serilog.Sinks.Elasticsearch` så kan anropet exempelvis göras som `c.WriteTo.Elasticsearch("http://localhost:9200", "myindex-{0:yyyy.MM.dd}")`. Det är valbart om parametrarna `expectedExceptions` och `ignoredMethods` ska anges eller inte.
+In this example, the configuration of Serilog is made through `c.WriteTo.Xyz(...)` and has to be replaced with the sink that you would like to use. For example with `Serilog.Sinks.Elasticsearch` the configuration could be done by `c.WriteTo.Elasticsearch("http://localhost:9200", "myindex-{0:yyyy.MM.dd}")`.
 
-Som alternativ till att i `ConfigureSerilog` skicka med en lista med ignorerade metoder kan man använda sig av attributet `IgnoreMember`.
+It is optional whether to pass the parameters `expectedExceptions` and `ignoredMethods` or not.
+
+As an alternative to configure ignored methods though `ConfigureSerilog`, you can use the `IgnoreMember` attribute. It is applicable to not only methods, but parameters as well.
 
 ```charp
 using Unity.Interception.Customization;
@@ -36,91 +44,71 @@ public interface IMyType
 
     void DoStuffWithSecretParameter(string username, [IgnoreMember] string password);
 }
+
 ```
 
-Som synes fungerar attributet även på parametrar. Är det inte önskvärt att logga en viss parameter, så kan man inte konfigurera detta via `ConfigureSerilog`, utan `IgnoreMember` är enda alternativet. 
+### Type Registration
 
-För att slå på loggning för en viss typ görs registrering via någon av extension-metoderna:
+To enable logging for a certain type use one of the extension methods:
 
 ```charp
 using Unity.Interception.Serilog;
 ...
 var container = new UnityContainer();
+...
 container
     .RegisterLoggedType<IMyType, MyType>();
     .RegisterLoggedInstance<IMyType>(new MyType());
 ```
-## Loggning
+## Logging
 
-All loggning via Serilogs `ILogger` berikas med de properties som tas upp i [CommonProperties.cs](/tfs/DefaultCollection/Innovation/Team/_git/Unity.Interception.Serilog?path=%2Fsrc%2FUnity.Interception.Serilog%2FCommonProperties.cs&version=GBmaster&_a=contents).
+All logs that is made through the `ILogger` that is registered in the container are enriched with the properties that are mentioned in [CommonProperties.cs](src/Unity.Interception.Serilog/CommonProperties.cs).
 
-### Loggning av metodanrop
+### Trace Logs
 
-För alla loggade metodanrop tas förutom gemensamma propertiesarna även dessa med:
+Except from the common properties, the following is also logged for trace logs:
 
-* `SourceContext`: Namespace och typnamn
-* `EventId`: Metodnamn
-* `Arguments`: En lista med metodens argument och värden.
-* `Result`: Metodens resultat, om metoden har sådant. 
+* `SourceContext`: Namespace and och type name
+* `EventId`: Method name.
+* `Arguments`: A list of argument names and values.
+* `Result`: The result, if the method produces such a thing.
+* `Duration`: The execution time in ms.
+* `LogType`: Is set to `Trace`. This is nice to have to distinguish trace logs from for example event logs.
 
-För argument och resultat görs `ToString()` och inte någon serialisering på grund av prestandaskäl.
+Due to performance reasons, arguments and results are not serialized as objects, but captured with `ToString()`.
 
-Då exception loggas tas fälten `Exception` och `ExceptionType` även med.
+The properties `Exception` och `ExceptionType` are included for logs for thrown exceptions. 
 
-### Loggning av event
+### Event Logs
 
-Eftersom metoden `ConfigureSerilog` registrerar `ILogger` i containern kan man i klassen där man vill logga ta in `ILogger` som ett beroende via konstruktorn.
-
-```charp
-internal class MyType
-{
-    private readonly ILogger _logger;
-
-    public MyType(ILogger logger)
-    {
-        _logger = logger;
-    }
-
-    public void DoStuff()
-    {
-        _logger.Information(...);
-        ...
-    }
-}
-
-```
-
-Vill man i eventloggen ha med SourceContext och EventId på samma sätt som i loggningen av metodanropen, kan man göra det genom:
-```
-_logger.ForContext<MyType>().ForContext("EventId", nameof(DoStuff)).Information(...)
-```
-
-## Hur kommer jag igång?
-
-För att skapa en solution med exempelvis MVC som loggar till Elasticsearch görs följande. I en ASP.NET Web Application, kör följande i Package Manager Console:
-
-```
-Install-Package Unity.Interception.Serilog -Prerelease -Source http://ts-czc322767n/nugetserver/nuget
-Install-Package Serilog.Sinks.ElasticSearch
-Update-Package Elasticsearch.Net
-Install-Package Unity.Mvc
-Update-Package WebActivatorEx
-```
-
-Uppdatera `RegisterTypes` i App_Start/UnityConfig.cs till:
+There is no built in support for formating event logs like the trace logs. You will have to write your own helper for that. For example:
 
 ```charp
-public static void RegisterTypes(IUnityContainer container)
+public static void Information<T>(
+    this ILogger logger, string eventId,
+    string messageTemplate, params object[] propertyValues)
 {
-    string logUri = ConfigurationManager.AppSettings["LogUri"];
-    string indexFormat = ConfigurationManager.AppSettings["LogIndexFormat"];
-    container
-        .ConfigureSerilog(c => c.WriteTo.Elasticsearch(logUri, indexFormat))
-        .RegisterLoggedType<IApplicationService, ApplicationService>()
+    messageTemplate = "[{SourceContext}.{EventId}] " + messageTemplate;
+    logger
+        .ForContext<T>()
+        .ForContext("EventId", eventId)
+        .ForContext("LogType", "Event")
+        .Information(messageTemplate, propertyValues);
 }
 ```
 
-I exemplet så hämtas konfigurationsparametrar till Elasticsearch från AppSettings i Web.Config.
+### Serilog.Sinks.MSSqlServer Example
+
+There is a `TraceLog` helper class that is useful together with the SQL Server sink. For example, you could configure Serilog like so:
+
+```charp
+var columnOptions = new ColumnOptions { AdditionalDataColumns = TraceLog.DataColumns };
+columnOptions.Properties.ExcludeAdditionalProperties = true;
+var container = new UnityContainer()
+    .ConfigureSerilog(c => c.WriteTo.MSSqlServer(
+        "Server=.;Database=SerilogTest;Trusted_Connection=True;", "Log",
+        autoCreateSqlTable: true, columnOptions: columnOptions));
+```
 
 ## Links
 

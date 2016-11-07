@@ -8,7 +8,7 @@ using Serilog;
 
 namespace Unity.Interception.Serilog
 {
-    internal class MessageBuilder
+    internal class TraceLogBuilder
     {
         private readonly IMethodInvocation _input;
         private readonly IMethodReturn _result;
@@ -17,7 +17,7 @@ namespace Unity.Interception.Serilog
         public object[] PropertyValues => _propertyValues.ToArray();
         private readonly List<object> _propertyValues = new List<object>();
 
-        public MessageBuilder(IMethodInvocation input, IMethodReturn result, TimeSpan duration, ILogger logger)
+        public TraceLogBuilder(IMethodInvocation input, IMethodReturn result, TimeSpan duration, ILogger logger)
         {
             _input = input;
             _result = result;
@@ -31,7 +31,13 @@ namespace Unity.Interception.Serilog
             AddArguments();
             AddResultAndDuration();
             AddExceptionType();
+            AddLogType();
             return sb.ToString();
+        }
+
+        private void AddLogType()
+        {
+            Logger = Logger.ForContext("LogType", "Trace");
         }
 
         private void AddExceptionType()

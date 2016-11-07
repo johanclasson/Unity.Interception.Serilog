@@ -43,7 +43,7 @@ namespace Unity.Interception.Serilog.Tests.Support
             int processId = 0, string processName = null, string threadName = null, string appDomainName = null)
         {
             _selfLogOutput = new StringWriter();
-            SelfLog.Out = TextWriter.Synchronized(_selfLogOutput);
+            SelfLog.Enable(TextWriter.Synchronized(_selfLogOutput));
 
             var mock = new Mock<ICommonProperties>();
             mock.SetupGet(m => m.ManagedThreadId).Returns(managedThreadId);

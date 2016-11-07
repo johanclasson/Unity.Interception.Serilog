@@ -1,0 +1,11 @@
+source https://www.myget.org/F/aspnetvnext/
+source https://api.nuget.org/v3/index.json
+framework >= net452
+
+nuget FluentAssertions
+nuget Moq
+nuget Serilog.Sinks.Elasticsearch
+nuget Serilog.Sinks.MSSqlServer
+nuget Unity.Interception
+nuget xunit
+nuget xunit.runner.visualstudio beta

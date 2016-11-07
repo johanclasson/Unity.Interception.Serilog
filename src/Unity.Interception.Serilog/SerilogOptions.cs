@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Unity.Interception.Serilog
 {
-    public interface ISerilogOptions
+    internal interface ISerilogOptions
     {
         IEnumerable<Type> ExpectedExceptions { get; }
         IEnumerable<MethodIdentifier> IgnoredMethods { get; }

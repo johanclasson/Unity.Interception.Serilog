@@ -2,7 +2,7 @@ using System;
 
 namespace Unity.Interception.Serilog
 {
-    public interface IStopWatch
+    internal interface IStopWatch
     {
         void Start();
         void Stop();
