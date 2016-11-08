@@ -13,8 +13,15 @@ namespace Unity.Interception.Serilog
         {
             var configuration = new LoggerConfiguration();
             configureLogger(configuration);
+            return container.ConfigureSerilog(configuration, expectedExceptions, ignoredMethods);
+        }
+
+        public static IUnityContainer ConfigureSerilog(this IUnityContainer container, LoggerConfiguration configuration,
+            Type[] expectedExceptions = null, MethodIdentifier[] ignoredMethods = null)
+        {
             var properties = GetProperties(container);
             configuration.Enrich.With(new CommonPropertiesEnricher(properties));
+            // CreateLogger can only be called once
             ILogger logger = configuration.CreateLogger();
             container.RegisterInstance(logger);
             container.RegisterInstance<ISerilogOptions>(new SerilogOptions(expectedExceptions, ignoredMethods));

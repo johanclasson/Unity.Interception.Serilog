@@ -4,7 +4,7 @@ using System.Threading;
 
 namespace Unity.Interception.Serilog
 {
-    public interface ICommonProperties
+    internal interface ICommonProperties
     {
         int ManagedThreadId { get; }
         string MachineName { get; }

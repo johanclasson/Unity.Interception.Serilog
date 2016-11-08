@@ -33,7 +33,7 @@ namespace Unity.Interception.Serilog
 
         private void LogMethodResult(IMethodInvocation input, IMethodReturn result)
         {
-            var builder = new MessageBuilder(input, result, _stopWatch.Elapsed, _logger);
+            var builder = new TraceLogBuilder(input, result, _stopWatch.Elapsed, _logger);
             var message = builder.Build();
             var level = GetLevel(result);
             builder.Logger.Write(level, result.Exception, message, builder.PropertyValues);

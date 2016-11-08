@@ -36,13 +36,14 @@ namespace Unity.Interception.Serilog.Tests
             var properties = Log.Single().Properties;
             properties["SourceContext"].Should().Be("Unity.Interception.Serilog.Tests.Support.IDummy");
             properties["EventId"].Should().Be("ReturnStuff");
-            properties["Arguments"].ShouldBeEquivalentTo(new Dictionary<string, object>()
+            properties["Arguments"].ShouldBeEquivalentTo(new Dictionary<string, object>
             {
                 ["a"] = "1",
                 ["b"] = "b"
             });
             properties["Result"].Should().Be("1 b");
             properties["Duration"].Should().Be(2000.0);
+            properties["LogType"].Should().Be("Trace");
         }
     }
 }
