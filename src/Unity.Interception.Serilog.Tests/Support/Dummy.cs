@@ -1,5 +1,5 @@
 ﻿using System;
-using Unity.Interception.Customization;
+using Unity.Interception.Serilog.Customization;
 
 namespace Unity.Interception.Serilog.Tests.Support
 {

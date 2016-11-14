@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Unity.Interception.Customization;
+using Unity.Interception.Serilog.Customization;
 
 namespace Unity.Interception.Serilog
 {

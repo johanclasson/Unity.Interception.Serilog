@@ -245,4 +245,6 @@ _Pvt_Extensions
 # JetBrains Rider
 .idea/
 *.sln.iml
-src/.paket/paket.exe
+tools
+build.ps1
+out

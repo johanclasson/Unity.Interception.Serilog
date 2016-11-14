@@ -7,9 +7,9 @@
     <ProjectGuid>{A49A98B0-0B62-4580-BA31-E81E67A14D19}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Unity.Interception.Customization</RootNamespace>
-    <AssemblyName>Unity.Interception.Customization</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <RootNamespace>Unity.Interception.Serilog.Customization</RootNamespace>
+    <AssemblyName>Unity.Interception.Serilog.Customization</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
