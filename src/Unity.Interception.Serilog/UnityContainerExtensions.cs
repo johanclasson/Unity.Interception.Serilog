@@ -3,28 +3,29 @@ using System.Linq;
 using Microsoft.Practices.Unity;
 using Microsoft.Practices.Unity.InterceptionExtension;
 using Serilog;
+using Serilog.Events;
 
 namespace Unity.Interception.Serilog
 {
     public static class UnityContainerExtensions
     {
         public static IUnityContainer ConfigureSerilog(this IUnityContainer container, Action<LoggerConfiguration> configureLogger,
-            Type[] expectedExceptions = null, MethodIdentifier[] ignoredMethods = null)
+            Type[] expectedExceptions = null, MethodIdentifier[] ignoredMethods = null, LogEventLevel level = LogEventLevel.Debug)
         {
             var configuration = new LoggerConfiguration();
             configureLogger(configuration);
-            return container.ConfigureSerilog(configuration, expectedExceptions, ignoredMethods);
+            return container.ConfigureSerilog(configuration, expectedExceptions, ignoredMethods, level);
         }
 
         public static IUnityContainer ConfigureSerilog(this IUnityContainer container, LoggerConfiguration configuration,
-            Type[] expectedExceptions = null, MethodIdentifier[] ignoredMethods = null)
+            Type[] expectedExceptions = null, MethodIdentifier[] ignoredMethods = null, LogEventLevel level = LogEventLevel.Debug)
         {
             var properties = GetProperties(container);
             configuration.Enrich.With(new CommonPropertiesEnricher(properties));
             // CreateLogger can only be called once
             ILogger logger = configuration.CreateLogger();
             container.RegisterInstance(logger);
-            container.RegisterInstance<ISerilogOptions>(new SerilogOptions(expectedExceptions, ignoredMethods));
+            container.RegisterInstance<ISerilogOptions>(new SerilogOptions(expectedExceptions, ignoredMethods, level));
             return container;
         }
 

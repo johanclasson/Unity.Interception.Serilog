@@ -17,7 +17,7 @@ public static void EnsureDirExists(string path){
 Task("Paket Restore")
     .Does(() => 
 {
-    string command = @"if (-not (Test-Path .\.paket\paket.exe)) { .\.paket\paket.bootstrapper.exe }; " +                     @".\.paket\paket.exe restore";
+    string command = @"if (-not (Test-Path .\.paket\paket.exe)) { .\.paket\paket.bootstrapper.exe }; .\.paket\paket.exe restore";
     Information("Running command: {0}", command);
     var settings = new ProcessSettings
     {

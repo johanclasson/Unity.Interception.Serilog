@@ -42,9 +42,9 @@ namespace Unity.Interception.Serilog
         private LogEventLevel GetLevel(IMethodReturn result)
         {
             if (result.Exception == null)
-                return LogEventLevel.Information;
+                return _options.Level;
             var expectedException = _options.ExpectedExceptions.Contains(result.Exception.GetType());
-            return expectedException ? LogEventLevel.Information : LogEventLevel.Error;
+            return expectedException ? _options.Level : LogEventLevel.Error;
         }
 
         private bool IgnoreMethod(IMethodInvocation input)

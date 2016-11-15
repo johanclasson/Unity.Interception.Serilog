@@ -4,6 +4,7 @@ using System.IO;
 using Microsoft.Practices.Unity;
 using Moq;
 using Serilog.Debugging;
+using Serilog.Events;
 
 namespace Unity.Interception.Serilog.Tests.Support
 {
@@ -16,10 +17,16 @@ namespace Unity.Interception.Serilog.Tests.Support
         public UnityContainer Container { get; } = new UnityContainer();
         public IReadOnlyCollection<LogEntry> Log => _loggerMock.Log;
 
-        public ContainerBuilder WithConfiguredSerilog(Type[] expectedExceptions = null, MethodIdentifier[] ignoredMethods = null)
+        public ContainerBuilder WithConfiguredSerilog(
+            Type[] expectedExceptions = null,
+            MethodIdentifier[] ignoredMethods = null,
+            LogEventLevel level = LogEventLevel.Debug
+        )
         {
             _loggerMock = new LoggerMock();
-            Container.ConfigureSerilog(c => c.WriteTo.Logger(_loggerMock.Object), expectedExceptions, ignoredMethods);
+            Container.ConfigureSerilog(
+                c => c.MinimumLevel.Is(level).WriteTo.Logger(_loggerMock.Object),
+                expectedExceptions, ignoredMethods, level);
             return this;
         }
 
