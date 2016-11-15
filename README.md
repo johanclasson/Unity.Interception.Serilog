@@ -8,6 +8,14 @@ In addition, all logging through the configured ILogger instance are enriched wi
 
 *Overview of Unity.Interception.Serilog*
 
+## Install
+
+To install Unity.Interception.Serilog, run the following command in the Package Manager Console:
+
+```
+Install-Package Unity.Interception.Serilog -Pre
+```
+
 ## Configuration
 
 The logging is set up by calling the `ConfigureSerilog` extension method on a container, and either pass in a `LoggerConfiguration` instance or use the overload with an action `Action` parameter where the `LoggerConfiguration` is created for you.
