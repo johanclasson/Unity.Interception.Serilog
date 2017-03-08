@@ -1,7 +1,7 @@
 ﻿type project
 authors Johan Classon
 description
-    Injects Serilog logging through Unity interceptors.
+    Automatic trace logging through Serilog that is instrumented by Unity.Interception.
 projectUrl
     https://github.com/johanclasson/Unity.Interception.Serilog
 licenseUrl

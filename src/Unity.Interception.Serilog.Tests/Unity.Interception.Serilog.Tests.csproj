@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LogDebugOnInterceptedInstanceTests.cs" />
     <Compile Include="LogInformationFromExpectedExceptionsTests.cs" />
     <Compile Include="DoNotLogIgnoredMethodsTests.cs" />
     <Compile Include="DoNotLogIgnoredArgumentsTests.cs" />
@@ -139,13 +140,13 @@
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6' Or $(TargetFrameworkVersion) == 'v4.6.1' Or $(TargetFrameworkVersion) == 'v4.6.2' Or $(TargetFrameworkVersion) == 'v4.6.3')">
       <ItemGroup>
-        <Reference Include="FluentAssertions.Core">
-          <HintPath>..\..\packages\FluentAssertions\lib\net45\FluentAssertions.Core.dll</HintPath>
+        <Reference Include="FluentAssertions">
+          <HintPath>..\..\packages\FluentAssertions\lib\net45\FluentAssertions.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
-        <Reference Include="FluentAssertions">
-          <HintPath>..\..\packages\FluentAssertions\lib\net45\FluentAssertions.dll</HintPath>
+        <Reference Include="FluentAssertions.Core">
+          <HintPath>..\..\packages\FluentAssertions\lib\net45\FluentAssertions.Core.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -241,6 +242,11 @@
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6' Or $(TargetFrameworkVersion) == 'v4.6.1' Or $(TargetFrameworkVersion) == 'v4.6.2' Or $(TargetFrameworkVersion) == 'v4.6.3')">
       <ItemGroup>
+        <Reference Include="Microsoft.Practices.Unity">
+          <HintPath>..\..\packages\Unity\lib\net45\Microsoft.Practices.Unity.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
         <Reference Include="Microsoft.Practices.Unity.Configuration">
           <HintPath>..\..\packages\Unity\lib\net45\Microsoft.Practices.Unity.Configuration.dll</HintPath>
           <Private>True</Private>
@@ -251,16 +257,11 @@
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
-        <Reference Include="Microsoft.Practices.Unity">
-          <HintPath>..\..\packages\Unity\lib\net45\Microsoft.Practices.Unity.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
       </ItemGroup>
     </When>
   </Choose>
   <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6' Or $(TargetFrameworkVersion) == 'v4.6.1' Or $(TargetFrameworkVersion) == 'v4.6.2' Or $(TargetFrameworkVersion) == 'v4.6.3')">
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6' Or $(TargetFrameworkVersion) == 'v4.6.1' Or $(TargetFrameworkVersion) == 'v4.6.2' Or $(TargetFrameworkVersion) == 'v4.6.3')">
       <ItemGroup>
         <Reference Include="xunit.abstractions">
           <HintPath>..\..\packages\xunit.abstractions\lib\net35\xunit.abstractions.dll</HintPath>
@@ -274,7 +275,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6' Or $(TargetFrameworkVersion) == 'v4.6.1' Or $(TargetFrameworkVersion) == 'v4.6.2' Or $(TargetFrameworkVersion) == 'v4.6.3')">
       <ItemGroup>
         <Reference Include="xunit.assert">
-          <HintPath>..\..\packages\xunit.assert\lib\portable-net45+win8+wp8+wpa81\xunit.assert.dll</HintPath>
+          <HintPath>..\..\packages\xunit.assert\lib\netstandard1.1\xunit.assert.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -285,7 +286,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6' Or $(TargetFrameworkVersion) == 'v4.6.1' Or $(TargetFrameworkVersion) == 'v4.6.2' Or $(TargetFrameworkVersion) == 'v4.6.3')">
       <ItemGroup>
         <Reference Include="xunit.core">
-          <HintPath>..\..\packages\xunit.extensibility.core\lib\portable-net45+win8+wp8+wpa81\xunit.core.dll</HintPath>
+          <HintPath>..\..\packages\xunit.extensibility.core\lib\netstandard1.1\xunit.core.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -293,10 +294,19 @@
     </When>
   </Choose>
   <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6' Or $(TargetFrameworkVersion) == 'v4.6.1' Or $(TargetFrameworkVersion) == 'v4.6.2' Or $(TargetFrameworkVersion) == 'v4.6.3')">
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6' Or $(TargetFrameworkVersion) == 'v4.6.1' Or $(TargetFrameworkVersion) == 'v4.6.2' Or $(TargetFrameworkVersion) == 'v4.6.3')">
       <ItemGroup>
         <Reference Include="xunit.execution.desktop">
-          <HintPath>..\..\packages\xunit.extensibility.execution\lib\net45\xunit.execution.desktop.dll</HintPath>
+          <HintPath>..\..\packages\xunit.extensibility.execution\lib\net452\xunit.execution.desktop.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
+      <ItemGroup>
+        <Reference Include="xunit.execution.dotnet">
+          <HintPath>..\..\packages\xunit.extensibility.execution\lib\netstandard1.1\xunit.execution.dotnet.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>

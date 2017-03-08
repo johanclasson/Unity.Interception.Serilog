@@ -12,7 +12,7 @@ namespace Unity.Interception.Serilog.Tests
         public LogInformationOnInterceptedTypeTests()
         {
             GivenThereExistsAContainer()
-                .WithConfiguredSerilog()
+                .WithConfiguredSerilog(level: LogEventLevel.Information)
                 .WithAStopWatch()
                 .WithADummyTypeRegistered();
             WhenDummyIsResolvedAnd().ReturnStuff(1, "b");

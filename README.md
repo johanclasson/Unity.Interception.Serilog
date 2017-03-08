@@ -1,6 +1,6 @@
-# Unity.Interception.Serilog
+# Unity.Interception.Serilog ![NuGet Status](https://img.shields.io/nuget/v/Unity.Interception.Serilog.svg?style=flat-square) ![Build Status](https://johanclasson.visualstudio.com/_apis/public/build/definitions/888f828d-d1a4-42fb-8b78-2e6420b1b2f8/14/badge)
 
-Types which are registered to the Unity Container with the `RegisterLoggedType` method are decorated with a logging behavior. The logs which are produced contains information about the respective types method invocations such as execution time, arguments and result, and are persisted though the Serilog ILogger-adapter.
+Types which are registered to the Unity Container with the `RegisterLoggedType` extension method are decorated with a logging behavior. The logs which are produced contains information about the respective types method invocations such as execution time, arguments and result, and are persisted though the Serilog ILogger-adapter.
 
 In addition, all logging through the configured ILogger instance are enriched with properties describing the environment where the logging event occurred.
 
@@ -8,12 +8,44 @@ In addition, all logging through the configured ILogger instance are enriched wi
 
 *Overview of Unity.Interception.Serilog*
 
-## Install
+## TL;DR
 
-To install Unity.Interception.Serilog, run the following command in the Package Manager Console:
+### Install NuGet-packages
 
-```
+```powershell
 Install-Package Unity.Interception.Serilog -Pre
+Install-Package Serilog.Sinks.Literate # Substitute this for your favorite Sink
+```
+
+### Sample Application
+
+```cs
+public interface IDummy
+{
+    void DoStuff();
+}
+
+internal class Dummy : IDummy
+{
+    public void DoStuff() { }
+}
+
+internal class Program
+{
+    public static void Main(string[] args)
+    {
+        using (var container = new UnityContainer())
+        {
+            container
+                .ConfigureSerilog(c => c.WriteTo.LiterateConsole())
+                .RegisterLoggedType<IDummy, Dummy>();
+
+            var dummy = container.Resolve<IDummy>();
+            dummy.DoStuff(); // Trace logs are written for method invocation
+            container.Resolve<ILogger>().Information("Application finished"); // Event log example
+        }
+    }
+}
 ```
 
 ## Configuration
@@ -24,25 +56,28 @@ The `ConfigureSerilog` method registers an `ILogger` instance in the container, 
 
 Thrown exceptions are logged as errors by default, but it is possible to configure a list of expected exceptions which are then logged as information instead.
 
-It is also possible to ignore methods from being logged at all, by passing a list of `MethodIdentifier`s.
+It is also possible to ignore methods from being logged at all, by passing a list of `MethodIdentifier`s. As an alternative to configure ignored methods though `ConfigureSerilog`, you can use the `IgnoreMember` attribute. It is not only applicable to methods, but parameters as well.
 
-```charp
+The event level of logs can be set through the level parameter.
+
+```cs
 using Unity.Interception.Serilog;
 ...
 var container = new UnityContainer();
 var expectedExceptions = new[] {typeof (InvalidOperationException)};
 var ignoredMethods = new[] { new MethodIdentifier(typeof(IMyType), nameof(IMyType.DoStuff)) };
+var level = LogEventLevel.Information
 container
-    .ConfigureSerilog(c => c.WriteTo.Xyz(...), expectedExceptions, ignoredMethods);
+    .ConfigureSerilog(c => c.WriteTo.Xyz(...), expectedExceptions, ignoredMethods, level);
 ``` 
 
 In this example, the configuration of Serilog is made through `c.WriteTo.Xyz(...)` and has to be replaced with the sink that you would like to use. For example with `Serilog.Sinks.Elasticsearch` the configuration could be done by `c.WriteTo.Elasticsearch("http://localhost:9200", "myindex-{0:yyyy.MM.dd}")`.
 
-It is optional whether to pass the parameters `expectedExceptions` and `ignoredMethods` or not.
+It is optional whether to pass the parameters `expectedExceptions`, `ignoredMethods` and `level` or not.
 
-As an alternative to configure ignored methods though `ConfigureSerilog`, you can use the `IgnoreMember` attribute. It is applicable to not only methods, but parameters as well.
+The event level of logs is set to `Debug` by default. You have to specify the minimum level `LoggerConfiguration` instance yourself. This means that if you do not specify the log level, only `Error` logs will not be written to your sink since the Serilog's default minimum level is set to `Information`.
 
-```charp
+```cs
 using Unity.Interception.Customization;
 ...
 public interface IMyType
@@ -59,7 +94,7 @@ public interface IMyType
 
 To enable logging for a certain type use one of the extension methods:
 
-```charp
+```cs
 using Unity.Interception.Serilog;
 ...
 var container = new UnityContainer();
@@ -68,6 +103,7 @@ container
     .RegisterLoggedType<IMyType, MyType>();
     .RegisterLoggedInstance<IMyType>(new MyType());
 ```
+
 ## Logging
 
 All logs that is made through the `ILogger` that is registered in the container are enriched with the properties that are mentioned in [CommonProperties.cs](src/Unity.Interception.Serilog/CommonProperties.cs).
@@ -91,7 +127,7 @@ The properties `Exception` och `ExceptionType` are included for logs for thrown 
 
 There is no built in support for formating event logs like the trace logs. You will have to write your own helper for that. For example:
 
-```charp
+```cs
 public static void Information<T>(
     this ILogger logger, string eventId,
     string messageTemplate, params object[] propertyValues)
@@ -109,7 +145,7 @@ public static void Information<T>(
 
 There is a `TraceLog` helper class that is useful together with the SQL Server sink. For example, you could configure Serilog like so:
 
-```charp
+```cs
 var columnOptions = new ColumnOptions { AdditionalDataColumns = TraceLog.DataColumns };
 columnOptions.Properties.ExcludeAdditionalProperties = true;
 var container = new UnityContainer()
@@ -122,4 +158,3 @@ var container = new UnityContainer()
 
 * [Serilog Wiki](https://github.com/serilog/serilog/wiki/Getting-Started)
 * [Patterns & Practices - Unity.Interception](https://msdn.microsoft.com/en-us/library/dn178466.aspx)
-

@@ -6,22 +6,22 @@ using Xunit;
 
 namespace Unity.Interception.Serilog.Tests
 {
-    public class LogInformationOnInterceptedInstanceTests : TestBase
+    public class LogDebugOnInterceptedInstanceTests : TestBase
     {
 
-        public LogInformationOnInterceptedInstanceTests()
+        public LogDebugOnInterceptedInstanceTests()
         {
             GivenThereExistsAContainer()
-                .WithConfiguredSerilog(level: LogEventLevel.Information)
+                .WithConfiguredSerilog() //Default level is Debug
                 .WithADummyInstanceRegistered();
             WhenDummyIsResolvedAnd().ReturnStuff(1, "b");
         }
 
         [Fact]
-        public void ThenAnInformationMessageShouldBeLogged()
+        public void ThenADebugMessageShouldBeLogged()
         {
             var entry = Log.Single();
-            entry.Level.Should().Be(LogEventLevel.Information);
+            entry.Level.Should().Be(LogEventLevel.Debug);
         }
     }
 }
