@@ -37,11 +37,11 @@ internal class Program
         using (var container = new UnityContainer())
         {
             container
-                .ConfigureSerilog(c => c.WriteTo.LiterateConsole())
+                .ConfigureSerilog(c => c.MinimumLevel.Debug().WriteTo.LiterateConsole())
                 .RegisterLoggedType<IDummy, Dummy>();
 
             var dummy = container.Resolve<IDummy>();
-            dummy.DoStuff(); // Trace logs are written for method invocation
+            dummy.DoStuff(); // Method call is logged
             container.Resolve<ILogger>().Information("Application finished"); // Event log example
         }
     }
@@ -50,7 +50,7 @@ internal class Program
 
 ## Configuration
 
-The logging is set up by calling the `ConfigureSerilog` extension method on a container, and either pass in a `LoggerConfiguration` instance or use the overload with an action `Action` parameter where the `LoggerConfiguration` is created for you.
+The logging is set up by calling the `ConfigureSerilog` extension method on a container, and either pass in a `LoggerConfiguration` instance or use the overload with an `Action` parameter where the `LoggerConfiguration` is created for you.
 
 The `ConfigureSerilog` method registers an `ILogger` instance in the container, so it's important that the `LoggerConfiguration` is configured before.
 
@@ -75,7 +75,7 @@ In this example, the configuration of Serilog is made through `c.WriteTo.Xyz(...
 
 It is optional whether to pass the parameters `expectedExceptions`, `ignoredMethods` and `level` or not.
 
-The event level of logs is set to `Debug` by default. You have to specify the minimum level `LoggerConfiguration` instance yourself. This means that if you do not specify the log level, only `Error` logs will not be written to your sink since the Serilog's default minimum level is set to `Information`.
+The event level of logs is set to `Debug` by default. You have to specify the minimum level on the `LoggerConfiguration` instance yourself. This means that if you do not specify the log level, only `Error` logs will be written to your sink since the Serilog's default minimum level is set to `Information`.
 
 ```cs
 using Unity.Interception.Customization;
