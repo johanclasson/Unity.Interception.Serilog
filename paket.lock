@@ -3,12 +3,12 @@ NUGET
   remote: https://api.nuget.org/v3/index.json
     Castle.Core (4.0)
     CommonServiceLocator (1.3)
-    Elasticsearch.Net (5.2)
+    Elasticsearch.Net (5.3.1)
     FluentAssertions (4.19.2)
-    Moq (4.7.1)
+    Moq (4.7.10)
       Castle.Core (>= 4.0)
     Serilog (2.4)
-    Serilog.Sinks.ElasticSearch (5.0)
+    Serilog.Sinks.ElasticSearch (5.1)
       Elasticsearch.Net (>= 2.4.2)
       Serilog (>= 2.2.1)
       Serilog.Sinks.File (>= 3.0.1)
@@ -16,7 +16,7 @@ NUGET
       Serilog.Sinks.RollingFile (>= 3.0.1)
     Serilog.Sinks.File (3.2)
       Serilog (>= 2.3)
-    Serilog.Sinks.MSSqlServer (4.2)
+    Serilog.Sinks.MSSqlServer (5.0)
       Serilog (>= 2.0)
       Serilog.Sinks.PeriodicBatching (>= 2.0)
     Serilog.Sinks.PeriodicBatching (2.1)
@@ -39,4 +39,4 @@ NUGET
       xunit.abstractions (>= 2.0.1) - framework: >= net452
     xunit.extensibility.execution (2.2)
       xunit.extensibility.core (2.2) - framework: >= net452
-    xunit.runner.visualstudio (2.2)
+    xunit.runner.visualstudio (2.3.0-beta1-build1309)
