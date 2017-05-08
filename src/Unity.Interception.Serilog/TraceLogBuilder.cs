@@ -11,16 +11,18 @@ namespace Unity.Interception.Serilog
     internal class TraceLogBuilder
     {
         private readonly IMethodInvocation _input;
-        private readonly IMethodReturn _result;
+        private readonly object _value;
+        private readonly Exception _exception;
         private readonly TimeSpan _duration;
         public ILogger Logger { get; private set; }
         public object[] PropertyValues => _propertyValues.ToArray();
         private readonly List<object> _propertyValues = new List<object>();
 
-        public TraceLogBuilder(IMethodInvocation input, IMethodReturn result, TimeSpan duration, ILogger logger)
+        public TraceLogBuilder(IMethodInvocation input, object value, Exception exception, TimeSpan duration, ILogger logger)
         {
             _input = input;
-            _result = result;
+            _value = value;
+            _exception = exception;
             _duration = duration;
             Logger = logger;
         }
@@ -42,9 +44,9 @@ namespace Unity.Interception.Serilog
 
         private void AddExceptionType()
         {
-            if (_result.Exception == null)
+            if (_exception == null)
                 return;
-            Logger = Logger.ForContext("ExceptionType", _result.Exception.GetType().FullName);
+            Logger = Logger.ForContext("ExceptionType", _exception.GetType().FullName);
         }
 
         private StringBuilder AddMethod()
@@ -72,10 +74,10 @@ namespace Unity.Interception.Serilog
                 return;
             if (_input.MethodBase.ToString().StartsWith("Void "))
                 return;
-            Logger = Logger.ForContext("Result", _result.ReturnValue);
+            Logger = Logger.ForContext("Result", _value);
         }
 
-        private bool IsFailedResult => _result.Exception != null;
+        private bool IsFailedResult => _exception != null;
 
         private IEnumerable<object> GetArguments()
         {

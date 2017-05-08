@@ -42,12 +42,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DoNotLogCanceledMethodsTests.cs" />
     <Compile Include="LogDebugOnInterceptedInstanceTests.cs" />
+    <Compile Include="LogErrorOnInterceptedTypeAsyncWithoutResultTests.cs" />
+    <Compile Include="LogErrorOnInterceptedTypeAsyncWithResultTests.cs" />
     <Compile Include="LogInformationFromExpectedExceptionsTests.cs" />
     <Compile Include="DoNotLogIgnoredMethodsTests.cs" />
     <Compile Include="DoNotLogIgnoredArgumentsTests.cs" />
     <Compile Include="LogErrorOnInterceptedTypeTests.cs" />
     <Compile Include="LogInformationOnInterceptedInstanceTests.cs" />
+    <Compile Include="LogInformationOnInterceptedTypeAsyncTests.cs" />
+    <Compile Include="LogInformationOnInterceptedTypeAsyncWithResultTests.cs" />
     <Compile Include="LogInformationOnInterceptedTypeTests.cs" />
     <Compile Include="LogsShouldBeEnriched.cs" />
     <Compile Include="LogsShouldNotBeEnrichedWithNullData.cs" />
