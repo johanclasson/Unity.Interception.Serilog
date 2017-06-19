@@ -21,7 +21,7 @@ namespace Unity.Interception.Serilog
         public string MachineName => Environment.MachineName;
         public int ProcessId => Process.GetCurrentProcess().Id;
         public string ProcessName => Process.GetCurrentProcess().ProcessName;
-        public string ThreadName => Thread.CurrentThread.Name; //TODO: Check for null?
+        public string ThreadName => Thread.CurrentThread.Name;
         public string AppDomainName => AppDomain.CurrentDomain.FriendlyName;
     }
 }

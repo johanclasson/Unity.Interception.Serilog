@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Practices.Unity;
+using Serilog;
 
 namespace Unity.Interception.Serilog.Tests.Support
 {
@@ -27,5 +28,7 @@ namespace Unity.Interception.Serilog.Tests.Support
         }
 
         protected string SelfLog => _builder.SelfLogOutput;
+
+        protected ILogger Logger => _builder.Container.Resolve<ILogger>();
     }
 }

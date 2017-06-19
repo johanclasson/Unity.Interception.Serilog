@@ -29,7 +29,6 @@ Task("Paket Restore")
     }
 });
 
-
 Task("Paket Outdated")
     .IsDependentOn("Paket Restore")
     .Does(() => 
@@ -79,7 +78,7 @@ Task("Test")
     EnsureDirExists(outputDir);
     var file = "**/bin/*/*.Tests.dll";
     var settings = new XUnit2Settings {
-        Parallelism = ParallelismOption.All,
+        Parallelism = ParallelismOption.None,
         HtmlReport = true,
         NoAppDomain = true,
         XmlReport = true,
