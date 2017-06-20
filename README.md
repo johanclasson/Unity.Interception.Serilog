@@ -13,7 +13,7 @@ In addition, all logging through the configured ILogger instance are enriched wi
 ### Install NuGet-packages
 
 ```powershell
-Install-Package Unity.Interception.Serilog -Pre
+Install-Package Unity.Interception.Serilog
 Install-Package Serilog.Sinks.Literate # Substitute this for your favorite Sink
 ```
 
@@ -39,7 +39,7 @@ internal class Program
             container
                 .ConfigureSerilog(c => c.MinimumLevel.Debug().WriteTo.LiterateConsole())
                 .RegisterLoggedType<IDummy, Dummy>();
-
+            Log.Logger.Information("Application starting"); // Event log example
             var dummy = container.Resolve<IDummy>();
             dummy.DoStuff(); // Method call is logged
             container.Resolve<ILogger>().Information("Application finished"); // Event log example
@@ -54,32 +54,11 @@ The logging is set up by calling the `ConfigureSerilog` extension method on a co
 
 The `ConfigureSerilog` method registers an `ILogger` instance in the container, so it's important that the `LoggerConfiguration` is configured before.
 
-Thrown exceptions are logged as errors by default, but it is possible to configure a list of expected exceptions which are then logged as information instead.
+Thrown exceptions are logged as errors by default, but it is possible to configure a list of expected exceptions which are then logged at the event level of trace logs instead.
 
 It is also possible to ignore methods from being logged at all, by passing a list of `MethodIdentifier`s. As an alternative to configure ignored methods though `ConfigureSerilog`, you can use the `IgnoreMember` attribute. It is not only applicable to methods, but parameters as well.
 
-The event level of logs can be set through the level parameter.
-
 ```cs
-using Unity.Interception.Serilog;
-...
-var container = new UnityContainer();
-var expectedExceptions = new[] {typeof (InvalidOperationException)};
-var ignoredMethods = new[] { new MethodIdentifier(typeof(IMyType), nameof(IMyType.DoStuff)) };
-var level = LogEventLevel.Information
-container
-    .ConfigureSerilog(c => c.WriteTo.Xyz(...), expectedExceptions, ignoredMethods, level);
-``` 
-
-In this example, the configuration of Serilog is made through `c.WriteTo.Xyz(...)` and has to be replaced with the sink that you would like to use. For example with `Serilog.Sinks.Elasticsearch` the configuration could be done by `c.WriteTo.Elasticsearch("http://localhost:9200", "myindex-{0:yyyy.MM.dd}")`.
-
-It is optional whether to pass the parameters `expectedExceptions`, `ignoredMethods` and `level` or not.
-
-The event level of logs is set to `Debug` by default. You have to specify the minimum level on the `LoggerConfiguration` instance yourself. This means that if you do not specify the log level, only `Error` logs will be written to your sink since the Serilog's default minimum level is set to `Information`.
-
-```cs
-using Unity.Interception.Customization;
-...
 public interface IMyType
 {
     [IgnoreMember]
@@ -90,15 +69,36 @@ public interface IMyType
 
 ```
 
+The event level of trace logs can be set through the level parameter. If it is not specified, the level defaults to `Debug`. You have to specify the minimum level on the `LoggerConfiguration` instance yourself.
+
+Serilog's default minimum level is set to `Information`. Because of that only `Error` logs will be written to your sink if you do not specify the log level.
+
+The configuration could be done like the following example.
+
+```cs
+var container = new UnityContainer();
+var expectedExceptions = new[]
+{
+    typeof(MyException)
+};
+var ignoredMethods = new[]
+{
+    new MethodIdentifier(typeof(IMyType), nameof(IMyType.DoStuff))
+};
+var level = LogEventLevel.Information;
+container
+    .ConfigureSerilog(c => c.MinimumLevel.Debug().WriteTo.Xyz(...),
+                      expectedExceptions, ignoredMethods, level);
+``` 
+
+It is optional whether to pass the parameters `expectedExceptions`, `ignoredMethods` and `level` or not.
+
 ### Type Registration
 
 To enable logging for a certain type use one of the extension methods:
 
 ```cs
-using Unity.Interception.Serilog;
-...
 var container = new UnityContainer();
-...
 container
     .RegisterLoggedType<IMyType, MyType>();
     .RegisterLoggedInstance<IMyType>(new MyType());
@@ -112,20 +112,20 @@ All logs that is made through the `ILogger` that is registered in the container 
 
 Except from the common properties, the following is also logged for trace logs:
 
-* `SourceContext`: Namespace and och type name
+* `SourceContext`: Namespace and type name
 * `EventId`: Method name.
 * `Arguments`: A list of argument names and values.
 * `Result`: The result, if the method produces such a thing.
 * `Duration`: The execution time in ms.
-* `LogType`: Is set to `Trace`. This is nice to have to distinguish trace logs from for example event logs.
+* `LogType`: Is set to `Trace`. For example, this might be used to distinguish trace logs from event logs.
 
 Due to performance reasons, arguments and results are not serialized as objects, but captured with `ToString()`.
 
-The properties `Exception` och `ExceptionType` are included for logs for thrown exceptions. 
+The properties `Exception` and `ExceptionType` are included for logs for thrown exceptions. 
 
 ### Event Logs
 
-There is no built in support for formating event logs like the trace logs. You will have to write your own helper for that. For example:
+There is no built in support for formatting event logs like the trace logs. You will have to write your own helper for that. For example:
 
 ```cs
 public static void Information<T>(

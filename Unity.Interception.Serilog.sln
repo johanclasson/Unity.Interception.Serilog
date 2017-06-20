@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{9F12C1B6-0E0D-4F84-9CF6-E929CC49C065}"
 	ProjectSection(SolutionItems) = preProject
@@ -14,6 +14,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.Interception.Serilog", "src\Unity.Interception.Serilog\Unity.Interception.Serilog.csproj", "{4D7B50C7-DBA0-4F53-B23F-C537D66375C7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.Interception.Serilog.Tests", "src\Unity.Interception.Serilog.Tests\Unity.Interception.Serilog.Tests.csproj", "{0FCBE96A-8507-4AC0-9211-737305B09CB0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.Interception.Serilog.StaticTests", "Unity.Interception.Serilog.StaticTests\Unity.Interception.Serilog.StaticTests.csproj", "{798F6E7C-3306-445E-B729-91A7523918FF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{0FCBE96A-8507-4AC0-9211-737305B09CB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0FCBE96A-8507-4AC0-9211-737305B09CB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0FCBE96A-8507-4AC0-9211-737305B09CB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{798F6E7C-3306-445E-B729-91A7523918FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{798F6E7C-3306-445E-B729-91A7523918FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{798F6E7C-3306-445E-B729-91A7523918FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{798F6E7C-3306-445E-B729-91A7523918FF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

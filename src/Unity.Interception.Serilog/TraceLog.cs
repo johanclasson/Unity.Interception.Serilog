@@ -3,8 +3,10 @@ using System.Data;
 
 namespace Unity.Interception.Serilog
 {
+    /// <summary>A utility class containing data columns matching the enriched properties added for logged types.</summary>
     public static class TraceLog
     {
+        /// <summary>Data columns matching the enriched properties added for logged types.</summary>
         public static ICollection<DataColumn> DataColumns => new[]
         {
             new DataColumn {DataType = typeof(string), ColumnName = "SourceContext", MaxLength = 250},

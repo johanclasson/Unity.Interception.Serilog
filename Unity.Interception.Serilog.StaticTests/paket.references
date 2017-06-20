@@ -1,0 +1,7 @@
+FluentAssertions
+Moq
+Serilog.Sinks.Elasticsearch
+Serilog.Sinks.MSSqlServer
+Unity
+xunit
+xunit.runner.visualstudio
