@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Serilog.Events;
 using Unity.Interception.Serilog.Tests.Support;
@@ -14,24 +15,26 @@ namespace Unity.Interception.Serilog.Tests
                 .WithConfiguredSerilog(level: LogEventLevel.Information)
                 .WithAStopWatch()
                 .WithADummyTypeRegistered();
-            WhenDummyIsResolvedAnd().DoStuffAsync().Wait();
         }
 
         [Fact]
-        public void ThenOneInformationLogShouldBeLogged()
+        public async Task ThenOneInformationLogShouldBeLogged()
         {
+            await WhenDummyIsResolvedAnd().DoStuffAsync();
             Log.Single().Level.Should().Be(LogEventLevel.Information);
         }
 
         [Fact]
-        public void ThenAnInformationWithExpectedMessageShouldBeLogged()
+        public async Task ThenAnInformationWithExpectedMessageShouldBeLogged()
         {
+            await WhenDummyIsResolvedAnd().DoStuffAsync();
             Log.Single().Message.Should().Be("Method \"DoStuffAsync\" returned");
         }
 
         [Fact]
-        public void ThenAnInformationWithExpectedPropertiesShouldBeLogged()
+        public async Task ThenAnInformationWithExpectedPropertiesShouldBeLogged()
         {
+            await WhenDummyIsResolvedAnd().DoStuffAsync();
             var properties = Log.Single().Properties;
             properties["SourceContext"].Should().Be("Unity.Interception.Serilog.Tests.Support.IDummy");
             properties["EventId"].Should().Be("DoStuffAsync");

@@ -71,16 +71,30 @@ Task("Build")
     MSBuild("Unity.Interception.Serilog.sln", settings);
 });
 
+Task("Undo Version")
+    .IsDependentOn("Build")
+    .IsDependentOn("Paket Pack")
+    .Does(() =>
+{
+    var settings = new ProcessSettings
+    {
+        Arguments = "/c \"git checkout -- */AssemblyInfo.cs\""
+    };
+    var exitCodeWithArgument = StartProcess("cmd", settings);
+    if (exitCodeWithArgument != 0) {
+        throw new Exception("Something bad happened. Exit code: " + exitCodeWithArgument);
+    }
+});
+
 Task("Test")
     .IsDependentOn("Build")
     .Does(() => 
 {
     EnsureDirExists(outputDir);
-    var file = "**/bin/*/*.Tests.dll";
+    var file = "./src/*/bin/" + configuration + "/*.Tests.dll";
     var settings = new XUnit2Settings {
         Parallelism = ParallelismOption.None,
         HtmlReport = true,
-        NoAppDomain = true,
         XmlReport = true,
         OutputDirectory = outputDir
     };
@@ -114,5 +128,6 @@ Task("Paket Pack")
 Task("Default")
     .IsDependentOn("Paket Pack")
     .IsDependentOn("Test")
+    .IsDependentOn("Undo Version")
     .IsDependentOn("Paket Outdated");
 RunTarget(target);
