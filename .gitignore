@@ -248,3 +248,5 @@ _Pvt_Extensions
 tools
 build.ps1
 out
+/.paket/Paket.Restore.targets
+/paket-files
